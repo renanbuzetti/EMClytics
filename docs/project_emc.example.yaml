@@ -1,0 +1,135 @@
+# project_emc.yaml — design intent, filled in by the designer (commented example).
+# The values in this file have PRIORITY over those inferred or imported from the format.
+# Units: lengths in mm, frequencies in Hz, times in s, impedances in Ω.
+# Fields with null = "not given": the rules that depend on them stay NOT VERIFIED (never passed).
+# The keys stay in Portuguese (they are the file format, the same in both languages); only these comments are in English.
+
+versao_esquema: 1
+rascunho: false             # true = not yet reviewed by the designer; the report shows this in the header and warnings
+
+projeto:
+  nome: "Example board"
+  revisao: "A"
+  # Target standard recorded in the report. The λ-based rules are calibrated for IEC 61000-6-1/-3;
+  # the rule base does not adapt the limits to another standard.
+  norma_alvo: {nome: "MIL-STD-461", versao: "G", observacao: null}
+
+entrada:
+  formato: odbpp            # odbpp | ipc2581 | gerber_x2_356_drill_pnp | altium_script
+  arquivos: ["export/placa_odb.tgz"]
+  versao_altium: null       # e.g. "24.x" — used to apply the list of known export problems
+
+coordenadas:
+  # Position of the Altium RELATIVE ORIGIN (Edit » Origin » Set) in the coordinate system of the exported file.
+  # Lets the report give coordinates you can find in Altium. null = report in the file's system and warn.
+  origem_altium_no_arquivo_mm: null      # e.g. [12.7, 5.08]
+  unidades_relatorio: [mm, mil]
+
+frequencias:
+  f_max_global_hz: 1.0e+9   # required for the λ-based rules
+  # There is no reliable conversion from tr to fMAX. If you want to use tr,
+  # declare here the factor k in fMAX = k / tr (your decision, marked as 'designer' in the report).
+  conversao_tr_para_fmax: null
+
+rede_plano_referencia: [GND]   # can be another net (e.g. ECL)
+digital_moderno: true          # RP-116 (≥ 8 layers for modern digital)
+
+nets_criticas:
+  - net: CLK_100M
+    f_max_hz: 1.0e+9
+    driver: U3.12              # refdes.pin of the driver (optional; improves RP-094/RP-096/RP-097)
+  - net_regex: "DDR_DQ[0-9]+"
+    f_max_hz: 2.0e+9
+  - net: SPI_SCK
+    tr_s: 2.0e-9               # only becomes fMAX if conversao_tr_para_fmax is defined
+    taxa_bits_bps: 2.0e+7      # RP-103 (optional)
+
+nets_sensiveis: [RESET_N]      # RP-021: internal lines that call for the interface treatment (e.g. reset)
+
+terras_separadas:              # RP-042: grounds (0V) kept separate on purpose, with the reason; their findings are accepted
+  - {net: GND_ISO, motivo: galvanic isolation (isolated DC-DC)}
+
+classes_de_net:                # used when the format has no net classes (ODB++, Gerber)
+  - nome: DIFF_USB
+    pares_diferenciais: [[USB_DP, USB_DN]]
+    z0_diferencial_ohm: 90
+    z0_modo_comum_ohm: null
+  - nome: SE50
+    nets_regex: ["RF_.*"]
+    z0_ohm: 50
+
+zonas:                         # EM zones: polygon in mm OR an Altium room (script)
+  - id: EMZ1
+    tipo: interna              # externa (EMZ0) | interna
+    poligono_mm: [[0, 0], [100, 0], [100, 80], [0, 80]]
+    f_max_hz: 1.0e+9
+    componentes_regex: [".*"]
+  - id: EMZ2A
+    tipo: interna
+    room_altium: SMPS
+    f_max_hz: 3.0e+8
+    componentes: [U10, L1, C40, C41]
+    # bls.altura_mm (optional): internal height of the can; RP-158 uses it in the internal diagonal (without it, only the base)
+    bls: {previsto: true, contorno_mm: [[60, 50], [90, 50], [90, 75], [60, 75]]}
+
+conectores_externos:           # conductors that leave the enclosure (EMZ0)
+  - refdes: J1
+    blindado: false
+    filtragem: serie_choke     # serie_choke | serie | shunt | nenhuma
+    zona_conector_poligono_mm: null   # null = derive it (envelope of the connector + filters)
+  - refdes: J2
+    blindado: true
+    filtragem: shunt
+
+conectores_placa_a_placa:
+  - refdes: J5
+    blindado: false
+
+conversores:
+  - nome: "Buck 12V→3V3"
+    componentes: [U10, L1]
+    f_chaveamento_hz: 5.0e+5
+    potencia_w: 10
+    capacitores_entrada: [C40]
+    capacitores_saida: [C41]
+    lacos:                     # RP-087 to RP-089
+      chaveador: {nets: [SW, VIN, PGND], componentes: [U10, C40]}
+      entrada: {nets: [VIN_RAW, GND], componentes: [J3, C40]}
+      saida: {nets: [V3V3, GND], componentes: [L1, C41]}
+
+redes_pwr_ruidosas: [VCORE_0V9]  # RP-129, RP-131
+
+componentes_especiais:
+  antenas: [ANT1]
+  cristais: [Y1]
+  bls: []                      # refdes of BLS footprints, if any
+
+pontos_de_bond_chassi:         # RP-060 to RP-068
+  - id: MH1
+    tipo: direto               # direto | capacitor | gaxeta | opcional
+  - id: MH2
+    tipo: opcional
+
+mecanica:
+  plano_paralelo_ao_chassi: true
+  er_meio_bond: 4.0            # RP-061: 4 (default, conservative) or 1.0 (air)
+  diametro_area_pressao_parafuso_mm: 7.0
+
+stackup_manual:                # used when the format has no stack-up (Gerber) or to correct the imported one
+  - {nome: L1, tipo: cobre, espessura_mm: 0.035}
+  - {nome: D1, tipo: dieletrico, espessura_mm: 0.10, er: 4.2, material: "FR4 prepreg"}
+  - {nome: L2, tipo: cobre, espessura_mm: 0.035}
+  - {nome: D2, tipo: dieletrico, espessura_mm: 1.20, er: 4.2, material: "FR4 core"}
+  - {nome: L3, tipo: cobre, espessura_mm: 0.035}
+  - {nome: D3, tipo: dieletrico, espessura_mm: 0.10, er: 4.2, material: "FR4 prepreg"}
+  - {nome: L4, tipo: cobre, espessura_mm: 0.035}
+
+parametros:                    # overrides rule parameters (including those the rule base left without a number)
+  RP-110: {raio_max_mm: 2.0}
+
+excecoes_aceitas:              # findings accepted by the designer: they appear as ACCEPTED, with the justification
+  - regra: RP-036
+    alvo: {net: LED_STATUS}
+    justificativa: "DC signal; crossing evaluated and accepted."
+    autor: "Designer name"
+    data: "2026-10-29"
