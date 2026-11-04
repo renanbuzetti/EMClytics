@@ -3,6 +3,13 @@
 Cada versão lista o que é novo, o que mudou e o que ainda não existe.
 Números de versão: MAJOR.MINOR.PATCH. A série 0.x é de prévia.
 
+## [0.3.2] — 2026-11-04
+
+### Mudou
+- **Exportação com defeito:** um registro ilegível (arquivo cortado ou corrompido) não derruba mais a análise. Ele fica de fora, uma faixa no alto da placa diz em quais arquivos isso aconteceu, e as regras que usam o dado afetado mostram que ele está parcial.
+- **Mais proteção ao abrir:** arquivo `.Z` corrompido, ou que passaria do limite de segurança na memória (1 GB por arquivo), é recusado com uma mensagem clara e o caminho do arquivo dentro da exportação.
+- **Mensagens sem a sua pasta:** os erros ao abrir mostram só o nome do arquivo ou da pasta escolhida, não o caminho com o seu nome de usuário. O registro de erro inesperado e o "Copiar detalhes" tiram a sua pasta pessoal em qualquer forma em que ela apareça (antes, ela escapava quando vinha dentro da mensagem do erro).
+
 ## [0.3.1] — 2026-11-04
 
 ### Novo

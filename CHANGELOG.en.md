@@ -3,6 +3,13 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.2] — 2026-11-04
+
+### Changed
+- **Damaged export:** an unreadable record (truncated or corrupted file) no longer brings the analysis down. It is left out, a bar at the top of the board says in which files this happened, and the rules that use the affected data show that it is partial.
+- **More protection when opening:** a corrupted `.Z` file, or one that would go over the safety limit in memory (1 GB per file), is refused with a clear message and the path of the file inside the export.
+- **Messages without your folder:** opening errors show only the name of the chosen file or folder, not the path with your user name. The unexpected-error log and "Copy details" remove your personal folder in any form it appears in (before, it slipped through when it came inside the error message).
+
 ## [0.3.1] — 2026-11-04
 
 ### New
