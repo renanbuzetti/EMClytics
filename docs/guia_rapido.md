@@ -14,7 +14,7 @@ O resultado é uma pasta `odb` (ou um `.tgz`/`.zip`), em geral dentro de `Projec
 
 ## 2. Abrir no EMClytics
 
-**Arquivo › Abrir pasta ODB++** e escolha a pasta `odb`, ou **Arquivo › Abrir arquivo ODB++** para o arquivo compactado. A análise leva alguns segundos (placas grandes, mais) e a placa aparece com as camadas.
+Na tela inicial, **Abrir pasta ODB++** e escolha a pasta `odb`, ou **Abrir arquivo ODB++** para o arquivo compactado. Também dá para arrastar a pasta ou o zip para a janela (com o `project_emc.yaml` junto, se houver). As placas abertas por último ficam em **Recentes**. Para conhecer o programa sem exportar nada, use **Abrir a placa de exemplo** (a LimeSDR Mini 2.5, com uma intenção ilustrativa). A análise leva alguns segundos (placas grandes, mais) e a placa aparece com as camadas.
 
 - **Camadas** (à esquerda): ligue e desligue camadas, vias, refdes e marcadores. Com **Só as camadas do achado**, a placa mostra só as camadas do achado escolhido; **Restaurar camadas** volta ao que estava.
 - **Achados** (à direita):

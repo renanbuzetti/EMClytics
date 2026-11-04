@@ -38,6 +38,7 @@ O EMClytics lê a exportação ODB++ da placa, aplica uma base de regras de boas
 - **Relatório HTML** da análise, com o mesmo resumo.
 - **Tema claro e escuro**, que pode seguir o Windows (**Exibir › Tema**).
 - **Português e inglês:** interface, achados, regras e relatório nos dois idiomas (menu **Idioma / Language**).
+- **Placa de exemplo** dentro do programa (LimeSDR Mini 2.5), para ver tudo funcionando com um clique.
 - **Sem IA e sem nuvem:** regras fixas, e tudo roda no seu computador.
 
 | | |
@@ -70,7 +71,7 @@ Requisitos: Windows 10 ou 11, 64 bits.
 ## Como usar
 
 1. Exporte a placa em ODB++ na sua ferramenta de CAD. No Altium Designer: **File › Fabrication Outputs › ODB++ Files**.
-2. No EMClytics, **Arquivo › Abrir pasta ODB++** (ou o `.tgz`/`.zip` exportado). Na primeira vez, o programa abre no idioma do Windows; para trocar, use o menu **Idioma / Language** (a troca vale quando o programa reabre).
+2. No EMClytics, **Arquivo › Abrir pasta ODB++** (ou o `.tgz`/`.zip` exportado), ou arraste a pasta ou o zip para a janela. Para conhecer o programa sem exportar nada, use **Abrir a placa de exemplo**, na tela inicial. Na primeira vez, o programa abre no idioma do Windows; para trocar, use o menu **Idioma / Language** (a troca vale quando o programa reabre).
 3. Na aba **Intenção**, informe o que a exportação não traz: fMAX, nets críticas e conectores externos (os demais campos, como cristais e stack-up, ficam no `project_emc.yaml`). Sem isso, as regras que dependem desses dados ficam "não verificadas".
 4. Clique num achado para ver o ponto na placa, o porquê e a correção. Se o achado for aceitável no seu projeto, use **Aceitar como exceção**, com justificativa.
 
@@ -142,6 +143,7 @@ EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout g
 - **HTML report** of the analysis, with the same summary.
 - **Light and dark theme**, which can follow Windows (**View › Theme**).
 - **Portuguese and English:** interface, findings, rules and report in both languages (**Idioma / Language** menu).
+- **An example board** inside the program (LimeSDR Mini 2.5), to see everything working with one click.
 - **No AI and no cloud:** fixed rules, and everything runs on your computer.
 
 | | |
@@ -170,7 +172,7 @@ Requirements: Windows 10 or 11, 64-bit.
 ### How to use
 
 1. Export the board as ODB++ from your CAD tool. In Altium Designer: **File › Fabrication Outputs › ODB++ Files**.
-2. In EMClytics, **File › Open ODB++ folder** (or the exported `.tgz`/`.zip`). The first time, the program opens in the Windows language; to change it, use the **Idioma / Language** menu (the change applies when the program restarts).
+2. In EMClytics, **File › Open ODB++ folder** (or the exported `.tgz`/`.zip`), or drag the folder or the zip onto the window. To try the program without exporting anything, use **Open the example board**, on the start screen. The first time, the program opens in the Windows language; to change it, use the **Idioma / Language** menu (the change applies when the program restarts).
 3. In the **Design intent** tab, give what the export does not carry: fMAX, critical nets and external connectors (the other fields, such as crystals and stack-up, go in `project_emc.yaml`). Without it, the rules that depend on this data stay "not verified".
 4. Click a finding to see the spot on the board, the reason and the fix. If the finding is acceptable in your design, use **Accept as exception**, with a justification.
 

@@ -14,7 +14,7 @@ The result is an `odb` folder (or a `.tgz`/`.zip`), usually inside `Project Outp
 
 ## 2. Open it in EMClytics
 
-**File › Open ODB++ folder** and choose the `odb` folder, or **File › Open ODB++ file** for the compressed file. The analysis takes a few seconds (longer for large boards) and the board appears with its layers.
+On the start screen, **Open ODB++ folder** and choose the `odb` folder, or **Open ODB++ file** for the compressed file. You can also drag the folder or the zip onto the window (with `project_emc.yaml` together, if you have one). The boards you opened last are in **Recent**. To try the program without exporting anything, use **Open the example board** (the LimeSDR Mini 2.5, with an illustrative design intent). The analysis takes a few seconds (longer for large boards) and the board appears with its layers.
 
 - **Layers** (left): turn layers, vias, refdes and markers on and off. With **Only the finding's layers**, the board shows only the layers of the chosen finding; **Restore layers** goes back to what was on.
 - **Findings** (right):

@@ -3,6 +3,23 @@
 Cada versão lista o que é novo, o que mudou e o que ainda não existe.
 Números de versão: MAJOR.MINOR.PATCH. A série 0.x é de prévia.
 
+## [0.3.1] — 2026-11-04
+
+### Novo
+- **Tela inicial:** antes de abrir uma placa, o programa mostra "Abrir pasta ODB++", "Abrir arquivo ODB++" e **"Abrir a placa de exemplo"**, mais as placas abertas por último.
+- **Placa de exemplo:** a LimeSDR Mini 2.5, da Lime Microsystems (Solderpad Hardware License v2.1, que vai junto), com uma intenção de projeto ilustrativa. Dá para ver achados, ilustrações e relatório sem exportar nada. Também em Arquivo › Abrir a placa de exemplo.
+- **Recentes:** na tela inicial e em Arquivo › Recentes.
+- **Arrastar e soltar:** solte a pasta ou o zip do ODB++ na janela para abrir. Solte junto o `project_emc.yaml` para usar a intenção.
+- **Erro inesperado:** em vez de o programa fechar sem aviso, uma janela explica o que houve e oferece **Copiar detalhes** para abrir uma issue. Um registro local (`%LOCALAPPDATA%\EMClytics\registro`) guarda o erro, sem dados da placa e sem o seu nome de usuário.
+
+### Mudou
+- **Falha ao abrir:** a mensagem diz o que fazer, por exemplo escolher a pasta da exportação ou exportar de novo com a netlist e os componentes.
+- **Segurança dos dados:**
+  - a cópia temporária da placa (ao abrir um .tgz ou .zip) é apagada mesmo quando a abertura falha;
+  - sobras de uma importação interrompida são limpas quando o programa abre;
+  - antes de descompactar, o programa confere o espaço livre e um limite de segurança (4 GB e 200 mil itens), contra arquivo malicioso que encheria o disco;
+  - arquivo corrompido vira uma mensagem clara.
+
 ## [0.3.0] — 2026-11-04 — primeira prévia pública (gratuita)
 
 ### Novo

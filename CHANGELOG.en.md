@@ -3,6 +3,23 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.1] — 2026-11-04
+
+### New
+- **Start screen:** before you open a board, the program shows "Open ODB++ folder", "Open ODB++ file" and **"Open the example board"**, plus the boards you opened last.
+- **Example board:** the LimeSDR Mini 2.5, by Lime Microsystems (Solderpad Hardware License v2.1, included), with an illustrative design intent. You can see findings, illustrations and the report without exporting anything. Also in File › Open the example board.
+- **Recent boards:** on the start screen and in File › Recent.
+- **Drag and drop:** drop the ODB++ folder or zip on the window to open it. Drop `project_emc.yaml` together to use the design intent.
+- **Unexpected error:** instead of the program closing without warning, a window explains what happened and offers **Copy details** to open an issue. A local log (`%LOCALAPPDATA%\EMClytics\registro`) keeps the error, with no board data and without your user name.
+
+### Changed
+- **Failure to open:** the message says what to do, for example choose the export folder or export again with the netlist and the components.
+- **Data safety:**
+  - the temporary copy of the board (when opening a .tgz or .zip) is deleted even when opening fails;
+  - leftovers from an interrupted import are cleaned when the program starts;
+  - before uncompressing, the program checks the free space and a safety limit (4 GB and 200,000 items), against a malicious file that would fill the disk;
+  - a corrupted file becomes a clear message.
+
 ## [0.3.0] — 2026-11-04 — first public preview (free)
 
 ### New
