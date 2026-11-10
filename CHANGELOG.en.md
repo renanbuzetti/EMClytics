@@ -3,6 +3,35 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.3] — 2026-11-10
+
+### New
+- **Command line in the executable:** `EMClytics-cli.exe`, next to `EMClytics.exe`, creates the HTML report without opening the window (for example, in a script): `EMClytics-cli --entrada <ODB++> --intencao project_emc.yaml --saida report.html`. The language is the window's (or `--idioma`), and the exit code tells whether it worked.
+- **Progress and Cancel:** the bar at the bottom shows the layer being read and the rule being evaluated; Cancel (or Esc) stops the analysis, and the board that was on screen stays.
+- **Check for updates** (Help menu): opens the versions page in the browser. The program still does not use the internet.
+- **Refdes prefixes in the design intent:** in `componentes_especiais.prefixos_refdes`, give the type of the components of a prefix the program does not recognize (e.g. `LED: diodo`). It applies to the components without a type from the CAD.
+- **Electromagnetic zones (Zones tab):** the program recognizes the zone of each IC from what is connected to it (connector, crystal, antenna, switching supply inductor, high-speed nets, net names) and says whether the current layout mixes the zones. It also draws a proposal over the board outline: the interface with all the connectors on one edge, the zones in bands, the ICs inside them and where shielding (BLS) goes, with the dimensions from fMAX. "Save drawing…" writes the drawing as SVG. In `zonas[].funcao` in `project_emc.yaml`, you set the zone of the components the program classified wrong.
+- **Report with the zones:** the HTML report has a new "Electromagnetic zones" section, with the drawings of today and of the proposal, the conflicts, the zones that call for shielding and why each IC is in its zone. The drawings follow the light or dark theme of whoever opens the report.
+- **Zones with the connectors in place:** the Zones tab has a third view, **Fixed connectors**, for when the connectors cannot move (enclosure, panel). The connectors and antennas stay where they are and the other zones are arranged around them, with the high-speed part as far as possible from the connectors and shielding recommended where the distance is not enough. A connector in the middle of the board becomes an island the components go around. The report has this third drawing.
+- **Grounds (0V):** the Zones tab has a **Grounds (0V)** view, also in the report. It shows each 0V net with its role (main 0V; separated by function, like AGND/DGND; chassis ground; input 0V before the filter; isolated), where the copper of each one is, the components that connect one to another, the boundaries with the main 0V and the ICs with 0V on different nets. Then it says what to do, in the order of the rules: a single 0V with separation by zoning; if the split stays, stitching along the whole boundary; isolation with capacitors; chassis ground with RF bonds next to the connectors.
+- **RP-008 and RP-023 checked:** off-board connectors on one edge, with no IC or decoupling capacitor between them and the same 0V; a declared zone larger than λ/10 at fMAX calls for BLS provision.
+- **RP-043, RP-044 and RP-045 checked:** connectors on different parts of the reference plane; stitching of a kept split (pitch below λ/10 at fMAX and all positions populated the same way); stitching of galvanic isolation with capacitors.
+
+### Changed
+- **Faster import:** on a real reference board, the import went from 9 s to 6 s, with the same findings.
+- **RP-036:** when the track crosses the gap between the plane and the copper of a signal net routed on the plane layer, the message speaks of a "gap in the plane" (before, it called the signal net a plane). This case is not mitigated by capacitors, which the rule provides only between two planes.
+- **RP-042:** chassis ground and the input 0V before the filter no longer count as a split of the circuit 0V: they become one warning per net that explains the role (before, one violation per layer).
+- **Clearer Interfaces and filtering tab:** each pin shows as a path from the connector to the IC, even when the IC sits after a series resistor or ferrite. Each part sits where it is on the board, closer to the connector or to the IC (by straight-line distance), with its symbol (resistor, ferrite, capacitor, TVS), and a badge gives the pin's status. Click a part to see it on the board. The text is shorter; how the tool reads the path is one click away.
+- **Stack-up cross-section:** the copper shows as in a board cross-section (solid on planes, as tracks on signal layers), with the dielectric weave, L1, L2…, the total thickness and an arrow from each signal layer to its reference plane.
+- **Fewer pointless alarms**, checked on 12 real example boards (the findings of these rules went from 514 to 300):
+  - **RP-183:** a track that does not leave the component's pad (it is the pad itself) is no longer a finding; the measured length is only what leaves the pad.
+  - **RP-012 and the Interfaces tab:** a single-pad component (test point, contact, wire pad) is not treated as a connector or as an IC.
+  - **RP-029:** copper with no net or on 0V (the reference, chassis ground) does not need a plane underneath: mounting holes, connector shells and chassis-ground bonding capacitors are gone.
+  - **RP-074:** the search for each decap's via no longer goes through another component's pad (before, a row of decaps, each with its own via, became one finding per via), and the vias shared by the same decaps come in one finding. A decap with no via of its own, using a neighbor's via, is still flagged.
+  - **RP-169:** a plane piece smaller than 1 mm² is not evaluated; with fMAX given, neither is a plane whose 1st resonance is above fMAX.
+  - **RP-190:** a power or control net with "CLK" in its name (VCC3P3_CLK, CLK_SEL) is not a clock; the pin escape between the IC's pads and the other line of the same crystal do not count.
+  - **RP-109 to RP-112:** a via in the pin's pad and a pin escape under the component itself (BGA fanout) are the direct connection to the pin, which the rule allows.
+
 ## [0.3.2] — 2026-11-04
 
 ### Changed

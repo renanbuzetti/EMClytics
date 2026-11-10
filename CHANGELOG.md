@@ -3,6 +3,35 @@
 Cada versão lista o que é novo, o que mudou e o que ainda não existe.
 Números de versão: MAJOR.MINOR.PATCH. A série 0.x é de prévia.
 
+## [0.3.3] — 2026-11-10
+
+### Novo
+- **Linha de comando no executável:** o `EMClytics-cli.exe`, ao lado do `EMClytics.exe`, gera o relatório HTML sem abrir a janela (por exemplo, num script): `EMClytics-cli --entrada <ODB++> --intencao project_emc.yaml --saida relatorio.html`. O idioma é o da janela (ou `--idioma`), e o código de saída diz se deu certo.
+- **Andamento e Cancelar:** a barra embaixo mostra a camada que está sendo lida e a regra que está sendo avaliada; Cancelar (ou Esc) interrompe a análise, e a placa que estava na tela continua.
+- **Verificar atualizações** (menu Ajuda): abre no navegador a página das versões. O programa continua sem usar a internet.
+- **Prefixos de refdes na intenção:** em `componentes_especiais.prefixos_refdes`, diga o tipo dos componentes de um prefixo que o programa não reconhece (ex.: `LED: diodo`). Vale para os componentes sem o tipo vindo do CAD.
+- **Zonas eletromagnéticas (aba Zonas):** o programa reconhece a zona de cada CI pelo que está ligado a ele (conector, cristal, antena, indutor de fonte chaveada, nets de alta velocidade, nome das nets) e diz se a disposição atual mistura as zonas. Também desenha uma proposta sobre o contorno da placa: a interface com todos os conectores numa borda, as zonas em faixas, os CIs dentro delas e onde vai blindagem (BLS), com as medidas pelo fMAX. "Salvar desenho…" grava o desenho em SVG. Em `zonas[].funcao` do `project_emc.yaml`, você define a zona dos componentes que o programa classificou errado.
+- **Relatório com as zonas:** o relatório HTML ganhou a seção "Zonas eletromagnéticas", com os desenhos de hoje e da proposta, os conflitos, as zonas que pedem blindagem e por que cada CI está na zona. Os desenhos seguem o tema claro ou escuro de quem abre o relatório.
+- **Zonas com os conectores no lugar:** a aba Zonas ganhou uma terceira vista, **Conectores fixos**, para quando os conectores não podem mudar de lugar (gabinete, painel). Os conectores e as antenas ficam onde estão e as outras zonas se arrumam em volta deles, com a parte rápida o mais longe possível dos conectores e a blindagem indicada onde a distância não basta. Conector no meio da placa vira uma ilha que os componentes contornam. O relatório traz esse terceiro desenho.
+- **Terras (0V):** a aba Zonas ganhou a vista **Terras (0V)**, também no relatório. Ela mostra cada rede de 0V com o papel dela (0V principal; separado por função, como AGND/DGND; terra de chassi; 0V de entrada antes do filtro; isolado), onde está o cobre de cada uma, os componentes que ligam uma à outra, as divisas com o 0V principal e os CIs com 0V em redes diferentes. Em seguida diz o que fazer, na ordem das regras: um 0V só com separação pelo zoneamento; se a divisão ficar, costura ao longo de toda a divisa; isolação com capacitores; terra de chassi com bonds de RF junto dos conectores.
+- **RP-008 e RP-023 verificadas:** conectores off-board numa borda só, sem CI nem capacitor de desacoplamento entre eles e com o mesmo 0V; zona declarada maior que λ/10 no fMAX pede provisão de BLS.
+- **RP-043, RP-044 e RP-045 verificadas:** conectores em partes diferentes do plano de referência; costura da divisão mantida (passo abaixo de λ/10 em fMAX e todas as posições populadas do mesmo jeito); costura da isolação galvânica com capacitores.
+
+### Mudou
+- **Importação mais rápida:** numa placa real de referência, a importação caiu de 9 s para 6 s, com os mesmos achados.
+- **RP-036:** quando a trilha cruza o vão entre o plano e o cobre de uma net de sinal roteada na camada do plano, a mensagem fala em "gap no plano" (antes, chamava a net de sinal de plano). Esse caso não é atenuado por capacitores, que a regra prevê só entre dois planos.
+- **RP-042:** a terra de chassi e o 0V de entrada antes do filtro não contam mais como divisão do 0V do circuito: viram um aviso por net, que explica o papel (antes, uma violação por camada).
+- **Aba Interfaces e filtragem, mais clara:** cada pino aparece como um caminho do conector até o CI, mesmo quando o CI está depois de um resistor ou de uma ferrite em série. Cada componente fica onde está na placa, mais perto do conector ou do CI (pela distância em linha reta), com o símbolo dele (resistor, ferrite, capacitor, TVS), e um selo diz a situação do pino. Clique num componente para vê-lo na placa. O texto ficou mais curto; como a ferramenta lê o caminho fica a um clique.
+- **Corte do stack-up:** o cobre aparece como num corte de placa (inteiro nos planos, em trilhas nas camadas de sinal), com a trama do dielétrico, L1, L2…, a espessura total e uma seta de cada camada de sinal até o plano de referência dela.
+- **Menos alarmes sem sentido**, conferido em 12 placas reais de exemplo (os achados dessas regras caíram de 514 para 300):
+  - **RP-183:** trilha que não sai do pad do componente (é o próprio pad) não é mais achado; o comprimento medido é só o que sai do pad.
+  - **RP-012 e aba Interfaces:** componente de um pad só (ponto de teste, contato, pad de fio) não é tratado como conector nem como CI.
+  - **RP-029:** cobre sem net ou de 0V (a referência, o terra de chassi) não precisa de plano por baixo: furo de fixação, concha de conector e capacitor de ligação do terra de chassi saíram.
+  - **RP-074:** a busca da via de cada decap não atravessa mais o pad de outro componente (antes, uma fileira de decaps, cada um com a sua via, virava um achado por via), e as vias divididas pelos mesmos decaps saem num achado só. Decap sem via própria, que usa a via de um vizinho, continua acusado.
+  - **RP-169:** pedaço de plano menor que 1 mm² não é avaliado; com fMAX informado, nem o plano cuja 1ª ressonância fica acima de fMAX.
+  - **RP-190:** net de alimentação ou de controle com "CLK" no nome (VCC3P3_CLK, CLK_SEL) não é clock; não contam a saída dos pinos entre os pads do CI nem a outra linha do mesmo cristal.
+  - **RP-109 a RP-112:** via no pad do pino e saída do pino sob o próprio componente (fanout de BGA) são a ligação direta ao pino, que a regra permite.
+
 ## [0.3.2] — 2026-11-04
 
 ### Mudou
