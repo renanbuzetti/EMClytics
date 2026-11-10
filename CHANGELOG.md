@@ -3,7 +3,7 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
-## [0.3.4] — unreleased
+## [0.3.4] — 2026-11-10
 
 ### Changed
 - **New visual identity:** a new logo (four PCB tracks with vias, in petrol blue and copper) and a new icon, legible down to 16 px. Both themes have new colors: the light one on a cool gray with petrol blue buttons, the dark one on charcoal with copper buttons. The start screen shows the logo, the tabs and titles use Montserrat (included, under the SIL Open Font License), and in the dark theme the illustrations of the findings sit on a light card, so the drawing keeps its colors. The HTML report opens with the logo, which follows the light or dark theme of whoever opens it.
