@@ -1,99 +1,99 @@
-# Novidades do EMClytics
+# What's new in EMClytics
 
-Cada versão lista o que é novo, o que mudou e o que ainda não existe.
-Números de versão: MAJOR.MINOR.PATCH. A série 0.x é de prévia.
+Each version lists what is new, what changed and what does not exist yet.
+Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
 ## [0.3.3] — 2026-11-10
 
-### Novo
-- **Linha de comando no executável:** o `EMClytics-cli.exe`, ao lado do `EMClytics.exe`, gera o relatório HTML sem abrir a janela (por exemplo, num script): `EMClytics-cli --entrada <ODB++> --intencao project_emc.yaml --saida relatorio.html`. O idioma é o da janela (ou `--idioma`), e o código de saída diz se deu certo.
-- **Andamento e Cancelar:** a barra embaixo mostra a camada que está sendo lida e a regra que está sendo avaliada; Cancelar (ou Esc) interrompe a análise, e a placa que estava na tela continua.
-- **Verificar atualizações** (menu Ajuda): abre no navegador a página das versões. O programa continua sem usar a internet.
-- **Prefixos de refdes na intenção:** em `componentes_especiais.prefixos_refdes`, diga o tipo dos componentes de um prefixo que o programa não reconhece (ex.: `LED: diodo`). Vale para os componentes sem o tipo vindo do CAD.
-- **Zonas eletromagnéticas (aba Zonas):** o programa reconhece a zona de cada CI pelo que está ligado a ele (conector, cristal, antena, indutor de fonte chaveada, nets de alta velocidade, nome das nets) e diz se a disposição atual mistura as zonas. Também desenha uma proposta sobre o contorno da placa: a interface com todos os conectores numa borda, as zonas em faixas, os CIs dentro delas e onde vai blindagem (BLS), com as medidas pelo fMAX. "Salvar desenho…" grava o desenho em SVG. Em `zonas[].funcao` do `project_emc.yaml`, você define a zona dos componentes que o programa classificou errado.
-- **Relatório com as zonas:** o relatório HTML ganhou a seção "Zonas eletromagnéticas", com os desenhos de hoje e da proposta, os conflitos, as zonas que pedem blindagem e por que cada CI está na zona. Os desenhos seguem o tema claro ou escuro de quem abre o relatório.
-- **Zonas com os conectores no lugar:** a aba Zonas ganhou uma terceira vista, **Conectores fixos**, para quando os conectores não podem mudar de lugar (gabinete, painel). Os conectores e as antenas ficam onde estão e as outras zonas se arrumam em volta deles, com a parte rápida o mais longe possível dos conectores e a blindagem indicada onde a distância não basta. Conector no meio da placa vira uma ilha que os componentes contornam. O relatório traz esse terceiro desenho.
-- **Terras (0V):** a aba Zonas ganhou a vista **Terras (0V)**, também no relatório. Ela mostra cada rede de 0V com o papel dela (0V principal; separado por função, como AGND/DGND; terra de chassi; 0V de entrada antes do filtro; isolado), onde está o cobre de cada uma, os componentes que ligam uma à outra, as divisas com o 0V principal e os CIs com 0V em redes diferentes. Em seguida diz o que fazer, na ordem das regras: um 0V só com separação pelo zoneamento; se a divisão ficar, costura ao longo de toda a divisa; isolação com capacitores; terra de chassi com bonds de RF junto dos conectores.
-- **RP-008 e RP-023 verificadas:** conectores off-board numa borda só, sem CI nem capacitor de desacoplamento entre eles e com o mesmo 0V; zona declarada maior que λ/10 no fMAX pede provisão de BLS.
-- **RP-043, RP-044 e RP-045 verificadas:** conectores em partes diferentes do plano de referência; costura da divisão mantida (passo abaixo de λ/10 em fMAX e todas as posições populadas do mesmo jeito); costura da isolação galvânica com capacitores.
+### New
+- **Command line in the executable:** `EMClytics-cli.exe`, next to `EMClytics.exe`, creates the HTML report without opening the window (for example, in a script): `EMClytics-cli --entrada <ODB++> --intencao project_emc.yaml --saida report.html`. The language is the window's (or `--idioma`), and the exit code tells whether it worked.
+- **Progress and Cancel:** the bar at the bottom shows the layer being read and the rule being evaluated; Cancel (or Esc) stops the analysis, and the board that was on screen stays.
+- **Check for updates** (Help menu): opens the versions page in the browser. The program still does not use the internet.
+- **Refdes prefixes in the design intent:** in `componentes_especiais.prefixos_refdes`, give the type of the components of a prefix the program does not recognize (e.g. `LED: diodo`). It applies to the components without a type from the CAD.
+- **Electromagnetic zones (Zones tab):** the program recognizes the zone of each IC from what is connected to it (connector, crystal, antenna, switching supply inductor, high-speed nets, net names) and says whether the current layout mixes the zones. It also draws a proposal over the board outline: the interface with all the connectors on one edge, the zones in bands, the ICs inside them and where shielding (BLS) goes, with the dimensions from fMAX. "Save drawing…" writes the drawing as SVG. In `zonas[].funcao` in `project_emc.yaml`, you set the zone of the components the program classified wrong.
+- **Report with the zones:** the HTML report has a new "Electromagnetic zones" section, with the drawings of today and of the proposal, the conflicts, the zones that call for shielding and why each IC is in its zone. The drawings follow the light or dark theme of whoever opens the report.
+- **Zones with the connectors in place:** the Zones tab has a third view, **Fixed connectors**, for when the connectors cannot move (enclosure, panel). The connectors and antennas stay where they are and the other zones are arranged around them, with the high-speed part as far as possible from the connectors and shielding recommended where the distance is not enough. A connector in the middle of the board becomes an island the components go around. The report has this third drawing.
+- **Grounds (0V):** the Zones tab has a **Grounds (0V)** view, also in the report. It shows each 0V net with its role (main 0V; separated by function, like AGND/DGND; chassis ground; input 0V before the filter; isolated), where the copper of each one is, the components that connect one to another, the boundaries with the main 0V and the ICs with 0V on different nets. Then it says what to do, in the order of the rules: a single 0V with separation by zoning; if the split stays, stitching along the whole boundary; isolation with capacitors; chassis ground with RF bonds next to the connectors.
+- **RP-008 and RP-023 checked:** off-board connectors on one edge, with no IC or decoupling capacitor between them and the same 0V; a declared zone larger than λ/10 at fMAX calls for BLS provision.
+- **RP-043, RP-044 and RP-045 checked:** connectors on different parts of the reference plane; stitching of a kept split (pitch below λ/10 at fMAX and all positions populated the same way); stitching of galvanic isolation with capacitors.
 
-### Mudou
-- **Importação mais rápida:** numa placa real de referência, a importação caiu de 9 s para 6 s, com os mesmos achados.
-- **RP-036:** quando a trilha cruza o vão entre o plano e o cobre de uma net de sinal roteada na camada do plano, a mensagem fala em "gap no plano" (antes, chamava a net de sinal de plano). Esse caso não é atenuado por capacitores, que a regra prevê só entre dois planos.
-- **RP-042:** a terra de chassi e o 0V de entrada antes do filtro não contam mais como divisão do 0V do circuito: viram um aviso por net, que explica o papel (antes, uma violação por camada).
-- **Aba Interfaces e filtragem, mais clara:** cada pino aparece como um caminho do conector até o CI, mesmo quando o CI está depois de um resistor ou de uma ferrite em série. Cada componente fica onde está na placa, mais perto do conector ou do CI (pela distância em linha reta), com o símbolo dele (resistor, ferrite, capacitor, TVS), e um selo diz a situação do pino. Clique num componente para vê-lo na placa. O texto ficou mais curto; como a ferramenta lê o caminho fica a um clique.
-- **Corte do stack-up:** o cobre aparece como num corte de placa (inteiro nos planos, em trilhas nas camadas de sinal), com a trama do dielétrico, L1, L2…, a espessura total e uma seta de cada camada de sinal até o plano de referência dela.
-- **Menos alarmes sem sentido**, conferido em 12 placas reais de exemplo (os achados dessas regras caíram de 514 para 300):
-  - **RP-183:** trilha que não sai do pad do componente (é o próprio pad) não é mais achado; o comprimento medido é só o que sai do pad.
-  - **RP-012 e aba Interfaces:** componente de um pad só (ponto de teste, contato, pad de fio) não é tratado como conector nem como CI.
-  - **RP-029:** cobre sem net ou de 0V (a referência, o terra de chassi) não precisa de plano por baixo: furo de fixação, concha de conector e capacitor de ligação do terra de chassi saíram.
-  - **RP-074:** a busca da via de cada decap não atravessa mais o pad de outro componente (antes, uma fileira de decaps, cada um com a sua via, virava um achado por via), e as vias divididas pelos mesmos decaps saem num achado só. Decap sem via própria, que usa a via de um vizinho, continua acusado.
-  - **RP-169:** pedaço de plano menor que 1 mm² não é avaliado; com fMAX informado, nem o plano cuja 1ª ressonância fica acima de fMAX.
-  - **RP-190:** net de alimentação ou de controle com "CLK" no nome (VCC3P3_CLK, CLK_SEL) não é clock; não contam a saída dos pinos entre os pads do CI nem a outra linha do mesmo cristal.
-  - **RP-109 a RP-112:** via no pad do pino e saída do pino sob o próprio componente (fanout de BGA) são a ligação direta ao pino, que a regra permite.
+### Changed
+- **Faster import:** on a real reference board, the import went from 9 s to 6 s, with the same findings.
+- **RP-036:** when the track crosses the gap between the plane and the copper of a signal net routed on the plane layer, the message speaks of a "gap in the plane" (before, it called the signal net a plane). This case is not mitigated by capacitors, which the rule provides only between two planes.
+- **RP-042:** chassis ground and the input 0V before the filter no longer count as a split of the circuit 0V: they become one warning per net that explains the role (before, one violation per layer).
+- **Clearer Interfaces and filtering tab:** each pin shows as a path from the connector to the IC, even when the IC sits after a series resistor or ferrite. Each part sits where it is on the board, closer to the connector or to the IC (by straight-line distance), with its symbol (resistor, ferrite, capacitor, TVS), and a badge gives the pin's status. Click a part to see it on the board. The text is shorter; how the tool reads the path is one click away.
+- **Stack-up cross-section:** the copper shows as in a board cross-section (solid on planes, as tracks on signal layers), with the dielectric weave, L1, L2…, the total thickness and an arrow from each signal layer to its reference plane.
+- **Fewer pointless alarms**, checked on 12 real example boards (the findings of these rules went from 514 to 300):
+  - **RP-183:** a track that does not leave the component's pad (it is the pad itself) is no longer a finding; the measured length is only what leaves the pad.
+  - **RP-012 and the Interfaces tab:** a single-pad component (test point, contact, wire pad) is not treated as a connector or as an IC.
+  - **RP-029:** copper with no net or on 0V (the reference, chassis ground) does not need a plane underneath: mounting holes, connector shells and chassis-ground bonding capacitors are gone.
+  - **RP-074:** the search for each decap's via no longer goes through another component's pad (before, a row of decaps, each with its own via, became one finding per via), and the vias shared by the same decaps come in one finding. A decap with no via of its own, using a neighbor's via, is still flagged.
+  - **RP-169:** a plane piece smaller than 1 mm² is not evaluated; with fMAX given, neither is a plane whose 1st resonance is above fMAX.
+  - **RP-190:** a power or control net with "CLK" in its name (VCC3P3_CLK, CLK_SEL) is not a clock; the pin escape between the IC's pads and the other line of the same crystal do not count.
+  - **RP-109 to RP-112:** a via in the pin's pad and a pin escape under the component itself (BGA fanout) are the direct connection to the pin, which the rule allows.
 
 ## [0.3.2] — 2026-11-04
 
-### Mudou
-- **Exportação com defeito:** um registro ilegível (arquivo cortado ou corrompido) não derruba mais a análise. Ele fica de fora, uma faixa no alto da placa diz em quais arquivos isso aconteceu, e as regras que usam o dado afetado mostram que ele está parcial.
-- **Mais proteção ao abrir:** arquivo `.Z` corrompido, ou que passaria do limite de segurança na memória (1 GB por arquivo), é recusado com uma mensagem clara e o caminho do arquivo dentro da exportação.
-- **Mensagens sem a sua pasta:** os erros ao abrir mostram só o nome do arquivo ou da pasta escolhida, não o caminho com o seu nome de usuário. O registro de erro inesperado e o "Copiar detalhes" tiram a sua pasta pessoal em qualquer forma em que ela apareça (antes, ela escapava quando vinha dentro da mensagem do erro).
+### Changed
+- **Damaged export:** an unreadable record (truncated or corrupted file) no longer brings the analysis down. It is left out, a bar at the top of the board says in which files this happened, and the rules that use the affected data show that it is partial.
+- **More protection when opening:** a corrupted `.Z` file, or one that would go over the safety limit in memory (1 GB per file), is refused with a clear message and the path of the file inside the export.
+- **Messages without your folder:** opening errors show only the name of the chosen file or folder, not the path with your user name. The unexpected-error log and "Copy details" remove your personal folder in any form it appears in (before, it slipped through when it came inside the error message).
 
 ## [0.3.1] — 2026-11-04
 
-### Novo
-- **Tela inicial:** antes de abrir uma placa, o programa mostra "Abrir pasta ODB++", "Abrir arquivo ODB++" e **"Abrir a placa de exemplo"**, mais as placas abertas por último.
-- **Placa de exemplo:** a LimeSDR Mini 2.5, da Lime Microsystems (Solderpad Hardware License v2.1, que vai junto), com uma intenção de projeto ilustrativa. Dá para ver achados, ilustrações e relatório sem exportar nada. Também em Arquivo › Abrir a placa de exemplo.
-- **Recentes:** na tela inicial e em Arquivo › Recentes.
-- **Arrastar e soltar:** solte a pasta ou o zip do ODB++ na janela para abrir. Solte junto o `project_emc.yaml` para usar a intenção.
-- **Erro inesperado:** em vez de o programa fechar sem aviso, uma janela explica o que houve e oferece **Copiar detalhes** para abrir uma issue. Um registro local (`%LOCALAPPDATA%\EMClytics\registro`) guarda o erro, sem dados da placa e sem o seu nome de usuário.
+### New
+- **Start screen:** before you open a board, the program shows "Open ODB++ folder", "Open ODB++ file" and **"Open the example board"**, plus the boards you opened last.
+- **Example board:** the LimeSDR Mini 2.5, by Lime Microsystems (Solderpad Hardware License v2.1, included), with an illustrative design intent. You can see findings, illustrations and the report without exporting anything. Also in File › Open the example board.
+- **Recent boards:** on the start screen and in File › Recent.
+- **Drag and drop:** drop the ODB++ folder or zip on the window to open it. Drop `project_emc.yaml` together to use the design intent.
+- **Unexpected error:** instead of the program closing without warning, a window explains what happened and offers **Copy details** to open an issue. A local log (`%LOCALAPPDATA%\EMClytics\registro`) keeps the error, with no board data and without your user name.
 
-### Mudou
-- **Falha ao abrir:** a mensagem diz o que fazer, por exemplo escolher a pasta da exportação ou exportar de novo com a netlist e os componentes.
-- **Segurança dos dados:**
-  - a cópia temporária da placa (ao abrir um .tgz ou .zip) é apagada mesmo quando a abertura falha;
-  - sobras de uma importação interrompida são limpas quando o programa abre;
-  - antes de descompactar, o programa confere o espaço livre e um limite de segurança (4 GB e 200 mil itens), contra arquivo malicioso que encheria o disco;
-  - arquivo corrompido vira uma mensagem clara.
+### Changed
+- **Failure to open:** the message says what to do, for example choose the export folder or export again with the netlist and the components.
+- **Data safety:**
+  - the temporary copy of the board (when opening a .tgz or .zip) is deleted even when opening fails;
+  - leftovers from an interrupted import are cleaned when the program starts;
+  - before uncompressing, the program checks the free space and a safety limit (4 GB and 200,000 items), against a malicious file that would fill the disk;
+  - a corrupted file becomes a clear message.
 
-## [0.3.0] — 2026-11-04 — primeira prévia pública (gratuita)
+## [0.3.0] — 2026-11-04 — first public preview (free)
 
-### Novo
-- **Importação ODB++** (pasta, .tgz ou .zip): camadas, stack-up, trilhas, planos (inclusive negativos), pads, vias, componentes e propriedades de BOM.
-  - Conferida com exportações do Altium Designer e do Siemens Xpedition. O programa segue a especificação ODB++ 8.1: outras ferramentas que exportam ODB++ (Cadence, KiCad, Zuken e outras) devem abrir, mas ainda não foram testadas.
-  - Arquivos em polegada ou em milímetro.
-  - Rígido-flex: as zonas rígida e flexível são lidas, e o plano que só existe nas partes rígidas não vira "fenda" na região flexível. O coverlay entra no stack-up.
-  - HDI: vias cegas e enterradas; vias empilhadas ou escalonadas contam como uma ligação só.
-  - Polígono hachurado, que o ODB++ exporta como centenas de linhas, é detectado e avisado. Ele não vira plano, e as aberturas da malha não contam como fenda.
-- **Base de regras:** 288 regras de boas práticas de layout para EMC: zoneamento, planos e caminho de retorno, desacoplamento, interfaces e filtragem, linhas de transmissão, stack-up, cristais, ESD de sistema e outras. Cada regra traz o mecanismo físico e a correção sugerida.
-- **25 checks automáticos:** RP-007, 012, 029, 030, 031, 036, 042, 047, 072, 073, 074, 109, 110, 111, 112, 116, 117, 120, 122, 158, 167, 169, 183, 190 e 192.
-  - As regras manuais aparecem como checklist.
-  - As que dependem de um dado ausente aparecem como "não verificadas", com o motivo. Nunca como aprovadas.
-  - A regra que rodou sem encontrar nada aparece como "Sem achado" (não quer dizer que a placa passa nos ensaios).
-  - Cada achado tem confiança (alta, média ou baixa), separada da severidade, com o motivo.
-- **Achados:**
-  - resumo no topo, como o Summary de um DRC: violações e avisos, uma linha por regra com a contagem e o Total; o clique leva às ocorrências;
-  - detalhe curto: o problema, como corrigir e, nas regras com conta, a conta feita com os valores da placa. O resto fica recolhido;
-  - ao clicar num achado, a placa mostra o ponto e, se você quiser, só as camadas dele;
-  - ilustração animada do problema e da correção, lado a lado, com a corrente andando.
-- **Intenção de projeto** (`project_emc.yaml`): fMAX, nets críticas, conectores externos, terras separadas de propósito, exceções aceitas e outros dados que a exportação não traz.
-  - Edição por formulário, sem perder os comentários do arquivo.
-  - Aviso na aba da placa quando a intenção ainda não foi preenchida.
-- **Interface visual:**
-  - placa com camadas, zoom, realce de net e busca;
-  - stack-up em corte, com o papel de cada camada e o plano de referência de cada camada de sinal;
-  - interfaces e filtragem, por conector, com o caminho de cada pino até o CI;
-  - "Aceitar como exceção", com justificativa, autor e data;
-  - tema claro e escuro (Exibir › Tema), que pode seguir o Windows.
-- **Idiomas:** português e inglês, no menu Idioma / Language (a troca vale quando o programa reabre; na primeira vez, o programa abre no idioma do Windows). Interface, achados, regras e relatório nos dois idiomas.
-- **Relatório HTML** com o mesmo resumo da tela e a mesma identidade visual. Ele segue o tema claro ou escuro do sistema de quem abre.
-- **Executável para Windows:** pasta com `EMClytics.exe`, sem instalar Python.
-- **Privacidade:** tudo roda no seu computador; o programa não usa a internet.
+### New
+- **ODB++ import** (folder, .tgz or .zip): layers, stack-up, tracks, planes (including negative ones), pads, vias, components and BOM properties.
+  - Checked with exports from Altium Designer and Siemens Xpedition. The program follows the ODB++ 8.1 specification: other tools that export ODB++ (Cadence, KiCad, Zuken and others) should open, but have not been tested yet.
+  - Files in inches or millimeters.
+  - Rigid-flex: the rigid and flexible zones are read, and a plane that only exists in the rigid parts does not become a "slot" in the flexible region. The coverlay goes into the stack-up.
+  - HDI: blind and buried vias; stacked or staggered vias count as a single connection.
+  - A hatched polygon, which ODB++ exports as hundreds of lines, is detected and reported. It does not become a plane, and the openings of the mesh do not count as slots.
+- **Rule base:** 288 rules of PCB layout good practice for EMC: zoning, planes and return path, decoupling, interfaces and filtering, transmission lines, stack-up, crystals, system ESD and others. Each rule gives the physical mechanism and the suggested fix.
+- **25 automatic checks:** RP-007, 012, 029, 030, 031, 036, 042, 047, 072, 073, 074, 109, 110, 111, 112, 116, 117, 120, 122, 158, 167, 169, 183, 190 and 192.
+  - Manual rules appear as a checklist.
+  - Rules that depend on missing data appear as "not verified", with the reason. Never as passed.
+  - A rule that ran and found nothing appears as "No finding" (it does not mean the board passes the tests).
+  - Each finding has a confidence (high, medium or low), separate from the severity, with the reason.
+- **Findings:**
+  - a summary at the top, like a DRC Summary: violations and warnings, one row per rule with the count and the Total; a click takes you to the occurrences;
+  - a short detail: the problem, how to fix it and, for the rules with a calculation, the calculation done with the board's values. The rest is collapsed;
+  - clicking a finding shows the spot on the board and, if you want, only its layers;
+  - an animated illustration of the problem and the fix, side by side, with the current moving.
+- **Design intent** (`project_emc.yaml`): fMAX, critical nets, external connectors, grounds kept apart on purpose, accepted exceptions and other data the export does not carry.
+  - Editing through a form, without losing the comments in the file.
+  - A notice on the board tab while the design intent has not been filled in.
+- **Visual interface:**
+  - board with layers, zoom, net highlight and search;
+  - stack-up cross-section, with the role of each layer and the reference plane of each signal layer;
+  - interfaces and filtering, per connector, with the path from each pin to the IC;
+  - "Accept as exception", with justification, author and date;
+  - light and dark theme (View › Theme), which can follow Windows.
+- **Languages:** Portuguese and English, in the Idioma / Language menu (the change applies when the program restarts; the first time, the program opens in the Windows language). Interface, findings, rules and report in both languages.
+- **HTML report** with the same summary as the screen and the same visual identity. It follows the light or dark theme of the system of whoever opens it.
+- **Windows executable:** a folder with `EMClytics.exe`, no Python installation needed.
+- **Privacy:** everything runs on your computer; the program does not use the internet.
 
-### Ainda não
-- Outros formatos de entrada (IPC-2581 e os demais).
-- Exportações de Cadence, KiCad e Zuken conferidas com placas reais.
-- Stack-up próprio para a zona flexível do rígido-flex (hoje, a análise usa o da zona rígida).
-- Integração com o Altium (script que exporta a placa e abre o programa).
-- Aviso de atualização dentro do programa.
-- Versão Pro: relatório em PDF, comparação entre revisões, histórico de projetos e mais checks.
+### Not yet
+- Other input formats (IPC-2581 and the rest).
+- Exports from Cadence, KiCad and Zuken checked with real boards.
+- A stack-up of its own for the flexible zone of rigid-flex boards (today, the analysis uses the rigid zone's).
+- Integration with Altium (a script that exports the board and opens the program).
+- Update notice inside the program.
+- Pro version: PDF report, comparison between revisions, project history and more checks.

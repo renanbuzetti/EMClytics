@@ -1,135 +1,19 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/img/logo_escuro.png">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/logo_dark.png">
     <img src="docs/img/logo.png" alt="EMClytics" height="64">
   </picture>
 </p>
 
-**Indicação de riscos de EMC em placas de circuito impresso, a partir do ODB++, antes de mandar fabricar.**
-*EMC risk review for PCBs, from their ODB++ export, before you send them to fab. [English below](#english).*
-
-![O EMClytics em uso: a placa com o resumo dos achados, um achado com a ilustração animada, o stack-up, as interfaces, as zonas, o 0V e o tema escuro](docs/img/demo.png)
-
-O EMClytics lê a exportação ODB++ da placa, aplica uma base de regras de boas práticas de layout para EMC e mostra cada risco na placa: o que foi encontrado, por que importa, como corrigir, a severidade e a confiança do achado. Cada achado vem com uma ilustração animada do problema e da correção.
-
-> **Prévia gratuita (0.x).** Os achados indicam risco de EMC segundo boas práticas de layout. Não são resultado de conformidade e não substituem ensaio de pré-conformidade nem medição.
-
-## O que faz
-
-- **Lê o ODB++** (pasta, `.tgz` ou `.zip`): camadas, stack-up, trilhas, planos (inclusive negativos), pads, vias, componentes e propriedades de BOM.
-  - Conferido com exportações do Altium Designer e do Siemens Xpedition. O programa segue a especificação ODB++ 8.1, então outras ferramentas que exportam ODB++ devem abrir.
-  - Placas rígido-flex (zonas rígida e flexível) e HDI (vias cegas, enterradas, empilhadas e escalonadas), em polegada ou milímetro.
-- **288 regras** de layout para EMC: zoneamento, planos e caminho de retorno, desacoplamento, interfaces e filtragem, linhas de transmissão, troca de camada, stack-up, cristais, ESD de sistema e outras. Cada regra traz o mecanismo físico e a correção sugerida.
-- **30 checks automáticos**, entre eles:
-  - trilha cruzando fenda ou divisão do plano de referência;
-  - 0V dividido (como AGND/DGND), conectores em partes diferentes do plano e costura de divisas e isolações;
-  - plano de referência incompleto ou hachurado, e trilha rápida perto da borda do plano;
-  - decap longe do pino de alimentação, na face oposta ou com via compartilhada;
-  - circuitos rápidos e cristais perto de conectores externos, e conectores externos espalhados por várias bordas;
-  - zona maior que λ/10 em fMAX sem previsão de blindagem;
-  - troca de camada em net crítica, sem vias de costura ou perto de fenda;
-  - planos da mesma rede sem vias de costura a cada λ/15;
-  - espaçamento de trilhas de clock;
-  - ressonância e formato dos planos;
-  - stack-up (camadas, espaçamento entre planos).
-- **Resumo como o de um DRC:** violações e avisos, uma linha por regra com a contagem e o Total. O clique leva às ocorrências.
-- **Detalhe curto em cada achado:** o problema, como corrigir e, nas regras com conta, a conta feita com os valores da placa. A placa mostra o ponto e, se você quiser, só as camadas dele.
-- **Ilustração animada em cada achado:** o problema e a correção lado a lado, com a corrente andando, para entender o contexto sem ser especialista.
-- **Nada passa por falta de dado:** regra que depende de um dado ausente aparece como "não verificada", com o motivo. As regras manuais aparecem como checklist.
-- **Stack-up em corte**, com o papel de cada camada; **recomendações** de roteamento por tipo de sinal; **interfaces e filtragem** por conector, com o caminho de cada pino até o CI.
-- **Zonas eletromagnéticas:** a zona de cada CI (interface, rádio, analógico, digital, digital rápido, fonte chaveada), se a disposição atual mistura as zonas e uma proposta sobre o contorno da placa, com os CIs, os conectores e onde vai blindagem. Outra vista mantém os conectores e as antenas no lugar e arruma o resto em volta deles.
-- **Terras (0V):** o papel de cada rede de 0V (principal, AGND/DGND, chassi, entrada, isolada), onde fica, o que liga uma à outra e o que fazer.
-- **Relatório HTML** da análise, com o mesmo resumo, as zonas e o 0V.
-- **Tema claro e escuro**, que pode seguir o Windows (**Exibir › Tema**).
-- **Português e inglês:** interface, achados, regras e relatório nos dois idiomas (menu **Idioma / Language**).
-- **Placa de exemplo** dentro do programa (LimeSDR Mini 2.5), para ver tudo funcionando com um clique.
-- **Linha de comando** (`EMClytics-cli.exe`): o mesmo relatório sem abrir a janela, para usar em scripts.
-- **Sem IA e sem nuvem:** regras fixas, e tudo roda no seu computador.
-
-| | |
-|---|---|
-| ![Placa inteira, com o resumo dos achados](docs/img/placa.png) | ![Interfaces e filtragem por conector](docs/img/interfaces.png) |
-| A placa, com as camadas e o resumo dos achados | Interfaces e filtragem, por conector |
-| ![Stack-up em corte e recomendações](docs/img/stackup.png) | ![Tema escuro](docs/img/tema_escuro.png) |
-| Stack-up em corte e recomendações por tipo de sinal | Tema escuro |
-| ![Zonas: a proposta sobre o contorno da placa](docs/img/zonas.png) | ![Terras (0V)](docs/img/terras.png) |
-| Zonas: a proposta, com os CIs, os conectores e a blindagem | Terras (0V): as redes de 0V e o que fazer |
-| ![Achado na placa: oscilador a 3,1 mm de um conector externo](docs/img/achado.png) | |
-| Um achado: o que é, a medida, como corrigir e a ilustração | |
-
-## Ilustrações
-
-Ao clicar num achado, o painel de detalhe mostra o problema e a correção, animados:
-
-![Trilha cruzando uma fenda no plano](docs/img/ilustracao_fenda.png)
-![Capacitor de desacoplamento longe do pino](docs/img/ilustracao_desacoplamento.png)
-![Troca de camada sem via de retorno](docs/img/ilustracao_troca_camada.png)
-![Conectores em bordas diferentes: os cabos formam um dipolo](docs/img/ilustracao_conectores_bordas.png)
-![Zona maior que λ/10 sem blindagem](docs/img/ilustracao_zona_grande.png)
-
-## Download
-
-1. Baixe o `EMClytics-<versão>-windows-x64.zip` em [Releases](../../releases/latest). O SHA-256 do arquivo está nas notas de cada versão.
-2. Extraia numa pasta de caminho curto (ex.: `C:\EMClytics`) e abra `EMClytics.exe`. Não precisa instalar nada.
-3. O executável ainda não tem assinatura digital. Se o Windows mostrar "O Windows protegeu o computador", clique em **Mais informações › Executar assim mesmo**.
-
-Requisitos: Windows 10 ou 11, 64 bits.
-
-**Para ser avisado de versões novas:** no alto desta página, clique em **Watch › Custom › Releases**. O GitHub avisa você por e-mail a cada versão.
-
-## Como usar
-
-1. Exporte a placa em ODB++ na sua ferramenta de CAD. No Altium Designer: **File › Fabrication Outputs › ODB++ Files**.
-2. No EMClytics, **Arquivo › Abrir pasta ODB++** (ou o `.tgz`/`.zip` exportado), ou arraste a pasta ou o zip para a janela. Para conhecer o programa sem exportar nada, use **Abrir a placa de exemplo**, na tela inicial. Na primeira vez, o programa abre no idioma do Windows; para trocar, use o menu **Idioma / Language** (a troca vale quando o programa reabre).
-3. Na aba **Intenção**, informe o que a exportação não traz: fMAX, nets críticas e conectores externos (os demais campos, como cristais e stack-up, ficam no `project_emc.yaml`). Sem isso, as regras que dependem desses dados ficam "não verificadas".
-4. Clique num achado para ver o ponto na placa, o porquê e a correção. Se o achado for aceitável no seu projeto, use **Aceitar como exceção**, com justificativa.
-
-Passo a passo: [docs/guia_rapido.md](docs/guia_rapido.md). Modelo comentado da intenção de projeto: [docs/project_emc.exemplo.yaml](docs/project_emc.exemplo.yaml).
-
-## Limitações conhecidas
-
-- Conferido com ODB++ do Altium Designer e do Siemens Xpedition. Cadence, KiCad, Zuken e outras ainda não foram testadas com placas reais.
-- Muitas exportações não trazem as camadas dielétricas: as regras de stack-up ficam não verificadas até você informar o stack-up na intenção de projeto.
-- Polígono hachurado é detectado e avisado, mas não vira plano: para a análise, use preenchimento sólido.
-- Slots desenhados como linha na furação não são lidos.
-- No rígido-flex, a análise usa o stack-up da zona rígida também na zona flexível.
-- A zona de cada CI vem do que está ligado a ele (conector, cristal, antena, indutor de fonte chaveada, nets rápidas, nome das nets): confira e, se precisar, corrija em `zonas[].funcao` no `project_emc.yaml`. A proposta de zonas é um esboço; a posição exata e o roteamento ficam com o projetista.
-
-O que mudou e o que ainda não existe, versão a versão: [CHANGELOG.md](CHANGELOG.md).
-
-## Free e Pro
-
-Esta prévia é gratuita e traz tudo o que existe hoje. A versão **Pro**, em preparação, vai somar relatório em PDF, comparação entre revisões, histórico de projetos e mais checks. Nada do que está no Free será retirado.
-
-## Privacidade
-
-O EMClytics não usa a internet: a placa e os resultados não saem do seu computador.
-
-## Contato
-
-Dúvidas, ideias e conversa sobre EMC: [Discussions](../../discussions). Relatos de erro e pedidos de melhoria: [Issues](../../issues). Ao relatar um erro, diga a versão do EMClytics e a ferramenta (com a versão) usada na exportação. Não anexe arquivos de placa que você não possa compartilhar.
-
-## Licença
-
-Uso gratuito nos termos de [LICENSE.md](LICENSE.md). O EMClytics usa componentes de código aberto (Python, Qt for Python, Shapely/GEOS, NumPy, PyYAML), cada um com a própria licença, que acompanha o programa na pasta `licencas`.
-
-Altium Designer, Xpedition e as demais ferramentas citadas são marcas dos seus donos. O EMClytics não é afiliado a eles nem endossado por eles.
-
-Imagens: placa LimeSDR Mini 2.5, da Lime Microsystems, sob a Solderpad Hardware License v2.1, analisada com uma intenção de projeto ilustrativa.
-
----
-
-## English
-
 **EMC risk review for printed circuit boards, from their ODB++ export, before you send them to fab.**
 
-![EMClytics in use: the board with the findings summary, a finding with its animated illustration, the stack-up, the interfaces, the zones, the 0V and the dark theme](docs/img/en_demo.png)
+![EMClytics in use: the board with the findings summary, two findings with their animated illustrations (decoupling capacitors sharing vias, external connectors on three edges), the stack-up, the interfaces, the zones, the 0V and the dark theme](docs/img/demo.png)
 
 EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout good practices for EMC and shows each risk on the board: what was found, why it matters, how to fix it, its severity and how confident the finding is. Each finding comes with an animated illustration of the problem and the fix.
 
 > **Free preview (0.x).** Findings indicate EMC risk according to layout good practices. They are not compliance results and do not replace pre-compliance testing or measurement.
 
-### What it does
+## What it does
 
 - **Reads ODB++** (folder, `.tgz` or `.zip`): layers, stack-up, tracks, planes (including negative ones), pads, vias, components and BOM properties.
   - Checked with exports from Altium Designer and Siemens Xpedition. The program follows the ODB++ 8.1 specification, so other tools that export ODB++ should open.
@@ -156,29 +40,33 @@ EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout g
 - **Grounds (0V):** the role of each 0V net (main, AGND/DGND, chassis, input, isolated), where it is, what connects one to another and what to do.
 - **HTML report** of the analysis, with the same summary, the zones and the 0V.
 - **Light and dark theme**, which can follow Windows (**View › Theme**).
-- **Portuguese and English:** interface, findings, rules and report in both languages (**Idioma / Language** menu).
+- **English and Portuguese:** interface, findings, rules and report in both languages (**Idioma / Language** menu).
 - **An example board** inside the program (LimeSDR Mini 2.5), to see everything working with one click.
 - **Command line** (`EMClytics-cli.exe`): the same report without opening the window, for use in scripts.
 - **No AI and no cloud:** fixed rules, and everything runs on your computer.
 
 | | |
 |---|---|
-| ![Whole board, with the findings summary](docs/img/en_placa.png) | ![Interfaces and filtering per connector](docs/img/en_interfaces.png) |
+| ![Whole board, with the findings summary](docs/img/board.png) | ![Interfaces and filtering per connector](docs/img/interfaces.png) |
 | The board, with layers and the findings summary | Interfaces and filtering, per connector |
-| ![Stack-up cross-section and recommendations](docs/img/en_stackup.png) | ![Dark theme](docs/img/en_tema_escuro.png) |
+| ![Stack-up cross-section and recommendations](docs/img/stackup.png) | ![Dark theme, with the finding of the external connectors on three edges](docs/img/dark_theme.png) |
 | Stack-up cross-section and recommendations by signal type | Dark theme |
-| ![Zones: the proposal over the board outline](docs/img/en_zonas.png) | ![Grounds (0V)](docs/img/en_terras.png) |
+| ![Zones: the proposal over the board outline](docs/img/zones.png) | ![Grounds (0V)](docs/img/grounds.png) |
 | Zones: the proposal, with the ICs, the connectors and the shielding | Grounds (0V): the 0V nets and what to do |
-| ![Finding on the board: oscillator 3.1 mm from an external connector](docs/img/en_achado.png) | |
+| ![Finding on the board: two decoupling capacitors sharing both of their vias](docs/img/finding.png) | |
 | A finding: what it is, the measurement, how to fix it and the illustration | |
 
-![Track crossing a slot in the plane](docs/img/en_ilustracao_fenda.png)
-![Decoupling capacitor far from the pin](docs/img/en_ilustracao_desacoplamento.png)
-![Layer change without a return via](docs/img/en_ilustracao_troca_camada.png)
-![Connectors on different edges: the cables form a dipole](docs/img/en_ilustracao_conectores_bordas.png)
-![Zone larger than λ/10 without shielding](docs/img/en_ilustracao_zona_grande.png)
+## Illustrations
 
-### Download
+When you click a finding, the detail panel shows the problem and the fix, animated:
+
+![Track crossing a slot in the plane](docs/img/illustration_slot.png)
+![Decoupling capacitor far from the pin](docs/img/illustration_decoupling.png)
+![Layer change without a return via](docs/img/illustration_layer_change.png)
+![Connectors on different edges: the cables form a dipole](docs/img/illustration_connectors_edges.png)
+![Zone larger than λ/10 without shielding](docs/img/illustration_large_zone.png)
+
+## Download
 
 1. Download `EMClytics-<version>-windows-x64.zip` from [Releases](../../releases/latest). The SHA-256 of the file is in the notes of each version.
 2. Extract it to a folder with a short path (e.g. `C:\EMClytics`) and open `EMClytics.exe`. Nothing needs to be installed.
@@ -188,16 +76,16 @@ Requirements: Windows 10 or 11, 64-bit.
 
 **To be notified of new versions:** at the top of this page, click **Watch › Custom › Releases**. GitHub emails you on each release.
 
-### How to use
+## How to use
 
 1. Export the board as ODB++ from your CAD tool. In Altium Designer: **File › Fabrication Outputs › ODB++ Files**.
 2. In EMClytics, **File › Open ODB++ folder** (or the exported `.tgz`/`.zip`), or drag the folder or the zip onto the window. To try the program without exporting anything, use **Open the example board**, on the start screen. The first time, the program opens in the Windows language; to change it, use the **Idioma / Language** menu (the change applies when the program restarts).
 3. In the **Design intent** tab, give what the export does not carry: fMAX, critical nets and external connectors (the other fields, such as crystals and stack-up, go in `project_emc.yaml`). Without it, the rules that depend on this data stay "not verified".
 4. Click a finding to see the spot on the board, the reason and the fix. If the finding is acceptable in your design, use **Accept as exception**, with a justification.
 
-Step by step: [docs/quick_guide.md](docs/quick_guide.md). Commented design intent template: [docs/project_emc.example.yaml](docs/project_emc.example.yaml). What changed and what does not exist yet, version by version: [CHANGELOG.en.md](CHANGELOG.en.md).
+Step by step: [docs/quick_guide.md](docs/quick_guide.md). Commented design intent template: [docs/project_emc.example.yaml](docs/project_emc.example.yaml).
 
-### Known limitations
+## Known limitations
 
 - Checked with ODB++ from Altium Designer and Siemens Xpedition. Cadence, KiCad, Zuken and others have not been tested with real boards yet.
 - Many exports do not include the dielectric layers: the stack-up rules stay not verified until you give the stack-up in the design intent.
@@ -206,21 +94,23 @@ Step by step: [docs/quick_guide.md](docs/quick_guide.md). Commented design inten
 - On rigid-flex boards, the analysis uses the rigid zone's stack-up in the flexible zone too.
 - The zone of each IC comes from what is connected to it (connector, crystal, antenna, switching supply inductor, fast nets, net names): check it and, if needed, correct it in `zonas[].funcao` in `project_emc.yaml`. The zone proposal is a sketch; the exact position and the routing are up to the designer.
 
-### Free and Pro
+What changed and what does not exist yet, version by version: [CHANGELOG.md](CHANGELOG.md).
+
+## Free and Pro
 
 This preview is free and includes everything that exists today. The **Pro** version, in preparation, will add a PDF report, comparison between revisions, project history and more checks. Nothing in Free will be removed.
 
-### Privacy
+## Privacy
 
 EMClytics does not use the internet: the board and the results never leave your computer.
 
-### Contact
+## Contact
 
 Questions, ideas and EMC talk: [Discussions](../../discussions). Bug reports and feature requests: [Issues](../../issues). When reporting a bug, give the EMClytics version and the tool (with its version) used for the export. Do not attach board files you are not allowed to share.
 
-### License
+## License
 
-Free use under the terms of [LICENSE.md](LICENSE.md) (Portuguese text, with an English summary). EMClytics uses open-source components (Python, Qt for Python, Shapely/GEOS, NumPy, PyYAML), each with its own license, which comes with the program in the `licencas` folder.
+Free use under the terms of [LICENSE.md](LICENSE.md), an English translation; the Portuguese text in [LICENSE.pt-BR.md](LICENSE.pt-BR.md) prevails. EMClytics uses open-source components (Python, Qt for Python, Shapely/GEOS, NumPy, PyYAML), each with its own license, which comes with the program in the `licencas` folder.
 
 Altium Designer, Xpedition and the other tools mentioned are trademarks of their owners. EMClytics is not affiliated with or endorsed by them.
 

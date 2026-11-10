@@ -1,29 +1,23 @@
-# Licença de uso gratuito — EMClytics Free
+# Free-use license — EMClytics Free
 
-Titular: Renan Buzetti Florêncio ("Titular"). Contato: renanbuzetti40@gmail.com.
+*This is an English translation, for convenience. The Portuguese text in [LICENSE.pt-BR.md](LICENSE.pt-BR.md) is the binding version and prevails in case of any divergence.*
 
-Este repositório traz a documentação e os downloads do EMClytics Free. O código-fonte não faz parte dele.
+Licensor: Renan Buzetti Florêncio ("Licensor"). Contact: renanbuzetti40@gmail.com.
 
-Ao instalar ou usar o EMClytics Free ("Programa"), você concorda com estes termos.
+This repository holds the documentation and the downloads of EMClytics Free. The source code is not part of it.
 
-1. **O que você pode fazer.** O Titular concede a você, de graça, uma licença não exclusiva e intransferível para instalar e usar o Programa em quantos computadores quiser, para fins pessoais ou profissionais, inclusive na análise de placas de clientes.
-2. **O que você não pode fazer.**
-   1. Vender, alugar, sublicenciar ou redistribuir o Programa, modificado ou não. Para indicar o Programa a outras pessoas, compartilhe o link deste repositório.
-   2. Fazer engenharia reversa, descompilar ou desmontar o Programa, nem extrair a base de regras, salvo na medida em que a lei aplicável permitir expressamente.
-   3. Remover ou alterar avisos de direitos, desta licença ou das licenças de terceiros.
-3. **Propriedade.** O Programa, a base de regras e a marca EMClytics pertencem ao Titular. Esta licença não transfere nenhum desses direitos. Componentes de terceiros (pasta `licencas` do Programa) seguem as próprias licenças; nada nesta licença limita os direitos que elas dão a você, inclusive o de substituir as bibliotecas LGPL (Qt e GEOS), que ficam em arquivos separados dentro da pasta `_internal`.
-4. **Resultados.** Os achados indicam risco de EMC segundo boas práticas de layout. Não são resultado de conformidade e não substituem ensaio de pré-conformidade, medição nem revisão por engenheiro qualificado. As decisões de projeto são suas.
-5. **Sem garantia.** O Programa é fornecido "no estado em que se encontra", sem garantia de nenhum tipo, expressa ou implícita, inclusive de adequação a um uso específico ou de ausência de erros.
-6. **Limitação de responsabilidade.** Na máxima extensão permitida pela lei, o Titular não responde por danos diretos ou indiretos decorrentes do uso ou da impossibilidade de uso do Programa, inclusive perda de dados, de produção, de lucros ou atrasos de projeto.
-7. **Privacidade.** O Programa roda só no seu computador: não usa a internet e não coleta nem envia dados.
-8. **Versões pagas.** Recursos e versões futuras (por exemplo, Pro e Enterprise) podem ter termos próprios. Esta licença vale para o EMClytics Free.
-9. **Fim da licença.** Se você descumprir estes termos, a licença termina automaticamente, e você deve apagar suas cópias do Programa.
-10. **Lei aplicável.** Estes termos seguem as leis da República Federativa do Brasil. Foro: Comarca de Campinas/SP.
+By installing or using EMClytics Free (the "Program"), you agree to these terms.
 
----
-
-## Free-use license — EMClytics Free (English summary)
-
-*This summary is for convenience; the Portuguese text above prevails.*
-
-You may install and use EMClytics Free free of charge, on any number of computers, for personal or professional work, including analyzing your clients' boards. You may not sell, rent, sublicense or redistribute it (share the link to this repository instead), nor reverse engineer, decompile or extract its rule base, except where the law expressly allows it. The program, its rule base and the EMClytics name belong to the licensor, Renan Buzetti Florêncio (contact: renanbuzetti40@gmail.com). Third-party components keep their own licenses, including your right to replace the LGPL libraries. Findings indicate EMC risk and are not compliance results. The program is provided "as is", without warranty, and the licensor is not liable for damages to the extent permitted by law. The program does not use the internet and collects no data. Brazilian law applies; venue: Campinas, São Paulo, Brazil.
+1. **What you may do.** The Licensor grants you, free of charge, a non-exclusive and non-transferable license to install and use the Program on as many computers as you wish, for personal or professional purposes, including the analysis of your clients' boards.
+2. **What you may not do.**
+   1. Sell, rent, sublicense or redistribute the Program, modified or not. To recommend the Program to other people, share the link to this repository.
+   2. Reverse engineer, decompile or disassemble the Program, or extract its rule base, except to the extent that the applicable law expressly permits it.
+   3. Remove or alter notices of rights, of this license or of third-party licenses.
+3. **Ownership.** The Program, the rule base and the EMClytics brand belong to the Licensor. This license does not transfer any of these rights. Third-party components (the Program's `licencas` folder) are governed by their own licenses; nothing in this license limits the rights they grant you, including the right to replace the LGPL libraries (Qt and GEOS), which are in separate files inside the `_internal` folder.
+4. **Results.** The findings indicate EMC risk according to layout good practices. They are not compliance results and do not replace pre-compliance testing, measurement or review by a qualified engineer. Design decisions are yours.
+5. **No warranty.** The Program is provided "as is", without warranty of any kind, express or implied, including fitness for a particular purpose or freedom from errors.
+6. **Limitation of liability.** To the maximum extent permitted by law, the Licensor is not liable for direct or indirect damages arising from the use of, or the inability to use, the Program, including loss of data, production or profits, or project delays.
+7. **Privacy.** The Program runs only on your computer: it does not use the internet and does not collect or send data.
+8. **Paid versions.** Future features and versions (for example, Pro and Enterprise) may have their own terms. This license applies to EMClytics Free.
+9. **Termination.** If you breach these terms, the license ends automatically, and you must delete your copies of the Program.
+10. **Governing law.** These terms are governed by the laws of the Federative Republic of Brazil. Venue: the courts of the district (Comarca) of Campinas, São Paulo, Brazil.
