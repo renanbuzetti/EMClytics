@@ -133,6 +133,9 @@ stackup_manual:                # used when the format has no stack-up (Gerber) o
   - {nome: D3, tipo: dieletrico, espessura_mm: 0.10, er: 4.2, material: "FR4 prepreg"}
   - {nome: L4, tipo: cobre, espessura_mm: 0.035}
 
+referencias_camadas:           # reference plane of each signal layer between two planes, when the stack-up has no
+  L3: L2                       # thicknesses (with them, the nearer plane counts); it can be a list: [L2, L4]
+
 parametros:                    # overrides rule parameters (including those the rule base left without a number)
   RP-110: {raio_max_mm: 2.0}
 

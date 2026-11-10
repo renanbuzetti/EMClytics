@@ -3,6 +3,19 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.4] — unreleased
+
+### Changed
+- **More assertive rules:** before reporting, each rule below checks what is around the finding and its dimensions. On the 12 real example boards, the findings of these rules went down from 402 to 314.
+  - **RP-183:** a track that reaches a contact without a component (a loose pad, or a hole the size of the board's component lead holes, where a wire or pin goes) has a destination and is no longer a finding. With fMAX, a track up to λ/100 is left out too: it is a lumped load, not an antenna.
+  - **RP-074:** each decap uses the via closest to it along the copper: the mesh of GND tracks under a BGA no longer makes a decap "share" its neighbor's via, and a pair that shares both the 0V via and the supply via is a single finding. A capacitor connected to a connector pin, a crystal or a clock is a filter, not decoupling, and is left out; on a net the program does not recognize as a supply, the finding comes with medium confidence and says why. The net after a ferrite coming from a supply is now a supply (also in RP-072 and RP-073).
+  - **RP-109 to RP-112:** with fMAX, a via connected to a single pin by a track up to λ/100 is the pin's escape (the device connection), not a layer change in the middle of the route.
+  - **RP-112:** when the slot near the via is merged antipads, the message says so, and whether the clearance of the via itself is part of them.
+  - **RP-190:** only parallel stretches are reported, with the clock and the other track running together for longer than the minimum spacing itself, and the message shows the length of that stretch. An approach at an end or at a bend does not count.
+  - **RP-169:** with no εr in the stack-up or in the design intent, it uses 4.2 (FR4) to leave out the planes whose resonance is above fMAX.
+  - **Clock by name:** XIN and XOUT only as a whole word (RXOUTIP, TXININ and MUXOUT are not clocks), and a name with a supply word (AMS_CLK_VCC3V3) is not a clock. This applies to RP-190 and to the critical net suggestions.
+- **Reference plane of each layer:** on a signal layer between two planes, RP-036 (track crossing a slot), RP-031 (critical track near the plane edge) and RP-109 to RP-112 look only at its reference plane: the nearer one, from the stack-up thicknesses. Before, a slot in the plane on the other side became an error. Without the thicknesses, the 0V plane counts, and the finding says so; to be sure, declare the reference in `referencias_camadas` in `project_emc.yaml` (e.g. `L3: L2`) or give the `stackup_manual`.
+
 ## [0.3.3] — 2026-11-10
 
 ### New
