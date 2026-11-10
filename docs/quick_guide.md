@@ -14,7 +14,7 @@ The result is an `odb` folder (or a `.tgz`/`.zip`), usually inside `Project Outp
 
 ## 2. Open it in EMClytics
 
-On the start screen, **Open ODB++ folder** and choose the `odb` folder, or **Open ODB++ file** for the compressed file. You can also drag the folder or the zip onto the window (with `project_emc.yaml` together, if you have one). The boards you opened last are in **Recent**. To try the program without exporting anything, use **Open the example board** (the LimeSDR Mini 2.5, with an illustrative design intent). The analysis takes a few seconds (longer for large boards) and the board appears with its layers. If the export has unreadable records (truncated or corrupted file), the board opens with a bar at the top that says in which files, and the affected data show as partial in the rules.
+On the start screen, **Open ODB++ folder** and choose the `odb` folder, or **Open ODB++ file** for the compressed file. You can also drag the folder or the zip onto the window (with `project_emc.yaml` together, if you have one). The boards you opened last are in **Recent**. To try the program without exporting anything, use **Open the example board** (the LimeSDR Mini 2.5, with an illustrative design intent). The analysis takes a few seconds (longer for large boards), with the progress in the bar at the bottom; **Cancel** (or Esc) stops it, and the board that was on screen stays. Then the board appears with its layers. If the export has unreadable records (truncated or corrupted file), the board opens with a bar at the top that says in which files, and the affected data show as partial in the rules.
 
 - **Layers** (left): turn layers, vias, refdes and markers on and off. With **Only the finding's layers**, the board shows only the layers of the chosen finding; **Restore layers** goes back to what was on.
 - **Findings** (right):
@@ -27,6 +27,9 @@ The other tabs:
 
 - **Stack-up and recommendations:** the cross-section of the board, with the role of each layer (signal, 0V plane, PWR plane) and the reference plane of each signal layer, and the routing recommendations by signal type.
 - **Interfaces and filtering:** each external connector, with the path from each pin to the IC and the filtering tips.
+- **Zones:** the electromagnetic zone of each IC (interface, radio, analog, digital, high-speed digital, switching power supply), whether the current layout mixes the zones and a proposal over the board outline: the separated zones, the ICs and the connectors inside them and where shielding goes. **Save drawing…** writes the drawing as SVG to send to whoever does the layout. If the program gets a component's zone wrong, correct it in `zonas[].funcao` in `project_emc.yaml`.
+  - **Fixed connectors:** when the connectors cannot move (enclosure, panel), this view keeps the connectors and antennas where they are and arranges the other zones around them.
+  - **Grounds (0V):** the board's 0V nets (main, AGND/DGND, chassis, input, isolated), where the copper of each one is, what connects one to another and what to do with them.
 
 The theme is in **View › Theme** (Follow Windows, Light or Dark). The language (Portuguese or English) is in the **Idioma / Language** menu; the change applies when the program restarts. The first time, the program opens in the Windows language.
 
@@ -35,7 +38,7 @@ The theme is in **View › Theme** (Follow Windows, Light or Dark). The language
 The export does not say what the highest frequency of interest is, which nets are critical or which connectors leave the board. This information goes in `project_emc.yaml`, next to the export. Until it is filled in, a notice at the top of the board shows how many rules are waiting for this data.
 
 - In the **Design intent** tab, create the file and fill in with the form fMAX, critical nets, external connectors and the grounds (0V) kept apart on purpose, with the reason.
-- The other fields (crystals, zones, manual stack-up, rule parameters) stay in the file itself; the commented template is [project_emc.example.yaml](project_emc.example.yaml). The keys of the file are in Portuguese in both languages: they are the file format.
+- The other fields (crystals, zones, manual stack-up, rule parameters, refdes prefixes) stay in the file itself; the commented template is [project_emc.example.yaml](project_emc.example.yaml). The keys of the file are in Portuguese in both languages: they are the file format.
 - A newly created file starts as a **draft**: the findings that depend on it come out with lower confidence until you review it and change `rascunho: true` to `false`.
 
 ## 4. Read the results
@@ -57,3 +60,15 @@ If a finding is acceptable in your project, select it and use **Accept as except
 ## 6. Report
 
 **Export HTML report** creates a file with the same summary as the screen, the findings of each rule, the rules not verified, the manual checklist, the rules with no finding and what the importer was able to read from the export. The report is in the program's language, shows the program version, the program that generated the ODB++ and an identifier of the rule base used, and follows the light or dark theme of the system of whoever opens it.
+
+## 7. Command line
+
+To create the report without opening the window (for example, in a script), use `EMClytics-cli.exe`, in the program folder:
+
+```
+EMClytics-cli --entrada <ODB++ folder or .tgz> --intencao project_emc.yaml --saida report.html
+```
+
+`EMClytics-cli --help` shows the options; they are in Portuguese, as are the keys of `project_emc.yaml`. The language is the same as the window's; to change it for one run only, use `--idioma en`. The exit code is 0 when the report was written, 2 when there is an error in `project_emc.yaml` and 3 when the board did not open.
+
+To find out whether there is a new version, use **Help › Check for updates**: the versions page opens in the browser. The program itself does not use the internet.

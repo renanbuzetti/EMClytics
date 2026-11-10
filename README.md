@@ -8,7 +8,7 @@
 **Indicação de riscos de EMC em placas de circuito impresso, a partir do ODB++, antes de mandar fabricar.**
 *EMC risk review for PCBs, from their ODB++ export, before you send them to fab. [English below](#english).*
 
-![O EMClytics em uso: a placa com o resumo dos achados, um achado com a ilustração animada, o stack-up, as interfaces e o tema escuro](docs/img/demo.png)
+![O EMClytics em uso: a placa com o resumo dos achados, um achado com a ilustração animada, o stack-up, as interfaces, as zonas, o 0V e o tema escuro](docs/img/demo.png)
 
 O EMClytics lê a exportação ODB++ da placa, aplica uma base de regras de boas práticas de layout para EMC e mostra cada risco na placa: o que foi encontrado, por que importa, como corrigir, a severidade e a confiança do achado. Cada achado vem com uma ilustração animada do problema e da correção.
 
@@ -20,11 +20,13 @@ O EMClytics lê a exportação ODB++ da placa, aplica uma base de regras de boas
   - Conferido com exportações do Altium Designer e do Siemens Xpedition. O programa segue a especificação ODB++ 8.1, então outras ferramentas que exportam ODB++ devem abrir.
   - Placas rígido-flex (zonas rígida e flexível) e HDI (vias cegas, enterradas, empilhadas e escalonadas), em polegada ou milímetro.
 - **288 regras** de layout para EMC: zoneamento, planos e caminho de retorno, desacoplamento, interfaces e filtragem, linhas de transmissão, troca de camada, stack-up, cristais, ESD de sistema e outras. Cada regra traz o mecanismo físico e a correção sugerida.
-- **25 checks automáticos**, entre eles:
+- **30 checks automáticos**, entre eles:
   - trilha cruzando fenda ou divisão do plano de referência;
+  - 0V dividido (como AGND/DGND), conectores em partes diferentes do plano e costura de divisas e isolações;
   - plano de referência incompleto ou hachurado, e trilha rápida perto da borda do plano;
   - decap longe do pino de alimentação, na face oposta ou com via compartilhada;
-  - circuitos rápidos e cristais perto de conectores externos;
+  - circuitos rápidos e cristais perto de conectores externos, e conectores externos espalhados por várias bordas;
+  - zona maior que λ/10 em fMAX sem previsão de blindagem;
   - troca de camada em net crítica, sem vias de costura ou perto de fenda;
   - planos da mesma rede sem vias de costura a cada λ/15;
   - espaçamento de trilhas de clock;
@@ -35,10 +37,13 @@ O EMClytics lê a exportação ODB++ da placa, aplica uma base de regras de boas
 - **Ilustração animada em cada achado:** o problema e a correção lado a lado, com a corrente andando, para entender o contexto sem ser especialista.
 - **Nada passa por falta de dado:** regra que depende de um dado ausente aparece como "não verificada", com o motivo. As regras manuais aparecem como checklist.
 - **Stack-up em corte**, com o papel de cada camada; **recomendações** de roteamento por tipo de sinal; **interfaces e filtragem** por conector, com o caminho de cada pino até o CI.
-- **Relatório HTML** da análise, com o mesmo resumo.
+- **Zonas eletromagnéticas:** a zona de cada CI (interface, rádio, analógico, digital, digital rápido, fonte chaveada), se a disposição atual mistura as zonas e uma proposta sobre o contorno da placa, com os CIs, os conectores e onde vai blindagem. Outra vista mantém os conectores e as antenas no lugar e arruma o resto em volta deles.
+- **Terras (0V):** o papel de cada rede de 0V (principal, AGND/DGND, chassi, entrada, isolada), onde fica, o que liga uma à outra e o que fazer.
+- **Relatório HTML** da análise, com o mesmo resumo, as zonas e o 0V.
 - **Tema claro e escuro**, que pode seguir o Windows (**Exibir › Tema**).
 - **Português e inglês:** interface, achados, regras e relatório nos dois idiomas (menu **Idioma / Language**).
 - **Placa de exemplo** dentro do programa (LimeSDR Mini 2.5), para ver tudo funcionando com um clique.
+- **Linha de comando** (`EMClytics-cli.exe`): o mesmo relatório sem abrir a janela, para usar em scripts.
 - **Sem IA e sem nuvem:** regras fixas, e tudo roda no seu computador.
 
 | | |
@@ -47,6 +52,8 @@ O EMClytics lê a exportação ODB++ da placa, aplica uma base de regras de boas
 | A placa, com as camadas e o resumo dos achados | Interfaces e filtragem, por conector |
 | ![Stack-up em corte e recomendações](docs/img/stackup.png) | ![Tema escuro](docs/img/tema_escuro.png) |
 | Stack-up em corte e recomendações por tipo de sinal | Tema escuro |
+| ![Zonas: a proposta sobre o contorno da placa](docs/img/zonas.png) | ![Terras (0V)](docs/img/terras.png) |
+| Zonas: a proposta, com os CIs, os conectores e a blindagem | Terras (0V): as redes de 0V e o que fazer |
 | ![Achado na placa: oscilador a 3,1 mm de um conector externo](docs/img/achado.png) | |
 | Um achado: o que é, a medida, como corrigir e a ilustração | |
 
@@ -57,6 +64,8 @@ Ao clicar num achado, o painel de detalhe mostra o problema e a correção, anim
 ![Trilha cruzando uma fenda no plano](docs/img/ilustracao_fenda.png)
 ![Capacitor de desacoplamento longe do pino](docs/img/ilustracao_desacoplamento.png)
 ![Troca de camada sem via de retorno](docs/img/ilustracao_troca_camada.png)
+![Conectores em bordas diferentes: os cabos formam um dipolo](docs/img/ilustracao_conectores_bordas.png)
+![Zona maior que λ/10 sem blindagem](docs/img/ilustracao_zona_grande.png)
 
 ## Download
 
@@ -84,6 +93,7 @@ Passo a passo: [docs/guia_rapido.md](docs/guia_rapido.md). Modelo comentado da i
 - Polígono hachurado é detectado e avisado, mas não vira plano: para a análise, use preenchimento sólido.
 - Slots desenhados como linha na furação não são lidos.
 - No rígido-flex, a análise usa o stack-up da zona rígida também na zona flexível.
+- A zona de cada CI vem do que está ligado a ele (conector, cristal, antena, indutor de fonte chaveada, nets rápidas, nome das nets): confira e, se precisar, corrija em `zonas[].funcao` no `project_emc.yaml`. A proposta de zonas é um esboço; a posição exata e o roteamento ficam com o projetista.
 
 O que mudou e o que ainda não existe, versão a versão: [CHANGELOG.md](CHANGELOG.md).
 
@@ -113,7 +123,7 @@ Imagens: placa LimeSDR Mini 2.5, da Lime Microsystems, sob a Solderpad Hardware 
 
 **EMC risk review for printed circuit boards, from their ODB++ export, before you send them to fab.**
 
-![EMClytics in use: the board with the findings summary, a finding with its animated illustration, the stack-up, the interfaces and the dark theme](docs/img/en_demo.png)
+![EMClytics in use: the board with the findings summary, a finding with its animated illustration, the stack-up, the interfaces, the zones, the 0V and the dark theme](docs/img/en_demo.png)
 
 EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout good practices for EMC and shows each risk on the board: what was found, why it matters, how to fix it, its severity and how confident the finding is. Each finding comes with an animated illustration of the problem and the fix.
 
@@ -125,11 +135,13 @@ EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout g
   - Checked with exports from Altium Designer and Siemens Xpedition. The program follows the ODB++ 8.1 specification, so other tools that export ODB++ should open.
   - Rigid-flex boards (rigid and flexible zones) and HDI (blind, buried, stacked and staggered vias), in inches or millimeters.
 - **288 EMC layout rules:** zoning, planes and return path, decoupling, interfaces and filtering, transmission lines, layer changes, stack-up, crystals, system ESD and others. Each rule gives the physical mechanism and the suggested fix.
-- **25 automatic checks**, among them:
+- **30 automatic checks**, among them:
   - a track crossing a slot or split in the reference plane;
+  - a split 0V (like AGND/DGND), connectors on different parts of the plane and stitching of boundaries and isolations;
   - an incomplete or hatched reference plane, and a fast track near the plane edge;
   - a decap far from the power pin, on the opposite side or on a shared via;
-  - fast circuits and crystals near external connectors;
+  - fast circuits and crystals near external connectors, and external connectors spread over several edges;
+  - a zone larger than λ/10 at fMAX without provision for shielding;
   - layer changes on a critical net, without stitching vias or near a slot;
   - planes of the same net without stitching vias every λ/15;
   - clock track spacing;
@@ -140,10 +152,13 @@ EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout g
 - **An animated illustration in each finding:** the problem and the fix side by side, with the current moving, to understand the context without being a specialist.
 - **Missing data never passes:** a rule that depends on missing data appears as "not verified", with the reason. Manual rules appear as a checklist.
 - **Stack-up cross-section**, with the role of each layer; **routing recommendations** by signal type; **interfaces and filtering** per connector, with the path from each pin to the IC.
-- **HTML report** of the analysis, with the same summary.
+- **Electromagnetic zones:** the zone of each IC (interface, radio, analog, digital, high-speed digital, switching power supply), whether the current layout mixes the zones and a proposal over the board outline, with the ICs, the connectors and where shielding goes. Another view keeps the connectors and antennas in place and arranges the rest around them.
+- **Grounds (0V):** the role of each 0V net (main, AGND/DGND, chassis, input, isolated), where it is, what connects one to another and what to do.
+- **HTML report** of the analysis, with the same summary, the zones and the 0V.
 - **Light and dark theme**, which can follow Windows (**View › Theme**).
 - **Portuguese and English:** interface, findings, rules and report in both languages (**Idioma / Language** menu).
 - **An example board** inside the program (LimeSDR Mini 2.5), to see everything working with one click.
+- **Command line** (`EMClytics-cli.exe`): the same report without opening the window, for use in scripts.
 - **No AI and no cloud:** fixed rules, and everything runs on your computer.
 
 | | |
@@ -152,12 +167,16 @@ EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout g
 | The board, with layers and the findings summary | Interfaces and filtering, per connector |
 | ![Stack-up cross-section and recommendations](docs/img/en_stackup.png) | ![Dark theme](docs/img/en_tema_escuro.png) |
 | Stack-up cross-section and recommendations by signal type | Dark theme |
+| ![Zones: the proposal over the board outline](docs/img/en_zonas.png) | ![Grounds (0V)](docs/img/en_terras.png) |
+| Zones: the proposal, with the ICs, the connectors and the shielding | Grounds (0V): the 0V nets and what to do |
 | ![Finding on the board: oscillator 3.1 mm from an external connector](docs/img/en_achado.png) | |
 | A finding: what it is, the measurement, how to fix it and the illustration | |
 
 ![Track crossing a slot in the plane](docs/img/en_ilustracao_fenda.png)
 ![Decoupling capacitor far from the pin](docs/img/en_ilustracao_desacoplamento.png)
 ![Layer change without a return via](docs/img/en_ilustracao_troca_camada.png)
+![Connectors on different edges: the cables form a dipole](docs/img/en_ilustracao_conectores_bordas.png)
+![Zone larger than λ/10 without shielding](docs/img/en_ilustracao_zona_grande.png)
 
 ### Download
 
@@ -185,6 +204,7 @@ Step by step: [docs/quick_guide.md](docs/quick_guide.md). Commented design inten
 - A hatched polygon is detected and reported, but does not become a plane: for the analysis, use a solid fill.
 - Slots drawn as lines in the drill data are not read.
 - On rigid-flex boards, the analysis uses the rigid zone's stack-up in the flexible zone too.
+- The zone of each IC comes from what is connected to it (connector, crystal, antenna, switching supply inductor, fast nets, net names): check it and, if needed, correct it in `zonas[].funcao` in `project_emc.yaml`. The zone proposal is a sketch; the exact position and the routing are up to the designer.
 
 ### Free and Pro
 

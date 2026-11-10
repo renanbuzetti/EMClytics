@@ -66,6 +66,7 @@ zonas:                         # zonas EM: polígono em mm OU room do Altium (sc
   - id: EMZ2A
     tipo: interna
     room_altium: SMPS
+    funcao: potencia_chaveada  # interface | rf | analogico | digital | digital_rapido | potencia_chaveada (aba Zonas)
     f_max_hz: 3.0e+8
     componentes: [U10, L1, C40, C41]
     # bls.altura_mm (opcional): altura interna da lata; o RP-158 a usa na diagonal interna (sem ela, só a base)
@@ -102,6 +103,13 @@ componentes_especiais:
   antenas: [ANT1]
   cristais: [Y1]
   bls: []                      # refdes de footprints de BLS, se houver
+  # Tipo pelo prefixo do refdes, para prefixos que o programa não reconhece ou reconhece errado. Vale para os
+  # componentes sem o tipo vindo do CAD (propriedade TYPE); o prefixo mais longo ganha (LED antes de L).
+  # Tipos: ci, capacitor, resistor, ferrite, indutor, cristal, conector, tvs, diodo, transistor, transformador,
+  # antena, mecanico, outro.
+  prefixos_refdes:
+    LED: diodo
+    CR: diodo
 
 pontos_de_bond_chassi:         # RP-060 a RP-068
   - id: MH1
