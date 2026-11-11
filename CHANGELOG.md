@@ -3,6 +3,17 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.5] — unreleased
+
+### Changed
+- **Rules that did not run now run:** many ODB++ exports carry only the order of the copper layers, without the dielectric layers, and without the component properties. Before, this left 17 of the 30 automatic rules unchecked on most boards, among them RP-036 (track crossing a slot) and RP-012 (IC connected straight to the connector). Now they run with what the board has; the one that needs the thicknesses (RP-117) says only once that the data is missing. On the 11 real example boards, the automatic rules now run in 223 rule × board combinations, against 104 before.
+- **Calibration of the rules that now run** (without it, there would be 1,145 new findings on the 11 boards; with it, 464):
+  - **RP-036:** no finding when the plane goes around the obstacle within 2 mm of the crossing (the same distance accepted for a stitching capacitor), such as the clearance around a pad or a short track of another net, or a sliver of void. On a fill on an outer signal layer (a 2-layer board), only the holes in the fill remain; the tracks of other nets on that layer appear once, in RP-030. The boundary between the 0V and the chassis ground or the input 0V, in the connector zone, becomes a warning asking for the filter at the boundary (RP-017).
+  - **RP-031:** the clearance of vias (the one of the track's own via and the merged antipads of other vias, which have their own rule) does not count as a plane edge.
+  - **RP-029:** a track over the plane of the chassis ground or the input 0V has a plane under it; a track on the plane layer itself is left to RP-030.
+  - **RP-030 and RP-012:** one finding per layer and per connector, with the list of nets and pins, instead of one per net or per pin.
+  - **RP-047:** an overlap pocket smaller than λ/15 with a stitching via within λ/15 of it is not a finding.
+
 ## [0.3.4] — 2026-11-10
 
 ### Changed
