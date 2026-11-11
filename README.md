@@ -5,19 +5,21 @@
   </picture>
 </p>
 
-**EMC risk review for printed circuit boards, from their ODB++ export, before you send them to fab.**
+**EMC risk review for printed circuit boards, from their ODB++ or IPC-2581 export, before you send them to fab.**
 
 ![EMClytics in use: the board with the findings summary, two findings with their animated illustrations (decoupling capacitors sharing vias, external connectors on three edges), the stack-up, the interfaces, the zones, the 0V and the dark theme](docs/img/demo.png)
 
-EMClytics reads the ODB++ export of a board, applies a rule base of PCB layout good practices for EMC and shows each risk on the board: what was found, why it matters, how to fix it, its severity and how confident the finding is. Each finding comes with an animated illustration of the problem and the fix.
+EMClytics reads the ODB++ or IPC-2581 export of a board, applies a rule base of PCB layout good practices for EMC and shows each risk on the board: what was found, why it matters, how to fix it, its severity and how confident the finding is. Each finding comes with an animated illustration of the problem and the fix.
 
 > **Free preview (0.x).** Findings indicate EMC risk according to layout good practices. They are not compliance results and do not replace pre-compliance testing or measurement.
 
 ## What it does
 
 - **Reads ODB++** (folder, `.tgz` or `.zip`): layers, stack-up, tracks, planes (including negative ones), pads, vias, components and BOM properties.
-  - Checked with exports from Altium Designer and Siemens Xpedition. The program follows the ODB++ 8.1 specification, so other tools that export ODB++ should open.
+  - Checked with exports from Altium Designer, Siemens Xpedition and KiCad 9. The program follows the ODB++ 8.1 specification, so other tools that export ODB++ should open.
   - Rigid-flex boards (rigid and flexible zones) and HDI (blind, buried, stacked and staggered vias), in inches or millimeters.
+- **Reads IPC-2581** (revisions B and C: the `.xml` or `.cvg` file, or the `.zip` with it inside), with the thickness and εr of each layer when the export carries them. The format is recognized from the content.
+  - Checked with KiCad 9: 13 example boards exported in both formats give the same board and the same findings as their ODB++, apart from a few explained differences. Other tools that export IPC-2581 should open, but have not been tested yet.
 - **288 EMC layout rules:** zoning, planes and return path, decoupling, interfaces and filtering, transmission lines, layer changes, stack-up, crystals, system ESD and others. Each rule gives the physical mechanism and the suggested fix.
 - **30 automatic checks**, among them:
   - a track crossing a slot or split in the reference plane;
@@ -78,8 +80,8 @@ Requirements: Windows 10 or 11, 64-bit.
 
 ## How to use
 
-1. Export the board as ODB++ from your CAD tool. In Altium Designer: **File › Fabrication Outputs › ODB++ Files**.
-2. In EMClytics, **File › Open ODB++ folder** (or the exported `.tgz`/`.zip`), or drag the folder or the zip onto the window. To try the program without exporting anything, use **Open the example board**, on the start screen. The first time, the program opens in the Windows language; to change it, use the **Idioma / Language** menu (the change applies when the program restarts).
+1. Export the board as ODB++ or IPC-2581 from your CAD tool. In Altium Designer: **File › Fabrication Outputs › ODB++ Files**. In KiCad, prefer IPC-2581 (**File › Fabrication Outputs › IPC-2581…**): it carries the stack-up, which KiCad's ODB++ does not.
+2. In EMClytics, **File › Open ODB++ folder**, or **File › Open ODB++ or IPC-2581 file** for the `.tgz`/`.zip` or the IPC-2581 `.xml`; or drag the folder or the file onto the window. To try the program without exporting anything, use **Open the example board**, on the start screen. The first time, the program opens in the Windows language; to change it, use the **Idioma / Language** menu (the change applies when the program restarts).
 3. In the **Design intent** tab, give what the export does not carry: fMAX, critical nets and external connectors (the other fields, such as crystals and stack-up, go in `project_emc.yaml`). Without it, the rules that depend on this data stay "not verified".
 4. Click a finding to see the spot on the board, the reason and the fix. If the finding is acceptable in your design, use **Accept as exception**, with a justification.
 
@@ -87,7 +89,8 @@ Step by step: [docs/quick_guide.md](docs/quick_guide.md). Commented design inten
 
 ## Known limitations
 
-- Checked with ODB++ from Altium Designer and Siemens Xpedition. Cadence, KiCad, Zuken and others have not been tested with real boards yet.
+- Checked with ODB++ from Altium Designer, Siemens Xpedition and KiCad 9, and with IPC-2581 from KiCad 9. Cadence, Zuken and others have not been tested with real boards yet.
+- KiCad's IPC-2581 leaves out the outline width of graphic copper polygons (only the fill comes), so that copper comes out slightly smaller than drawn.
 - Many exports do not include the dielectric layers: the stack-up rules stay not verified until you give the stack-up in the design intent.
 - A hatched polygon is detected and reported, but does not become a plane: for the analysis, use a solid fill.
 - Slots drawn as lines in the drill data are not read.

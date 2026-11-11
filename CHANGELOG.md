@@ -3,7 +3,7 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
-## [0.3.5] — unreleased
+## [0.3.5] — 2026-11-11
 
 ### New
 - **IPC-2581 import:** besides ODB++, the program opens the IPC-2581 (revisions B and C) that KiCad and other CAD tools export: the .xml (or .cvg) file, or the .zip that contains it. The format is recognized from the content, when opening the file, on drag and drop, and on the command line. KiCad's IPC-2581 also carries the thickness and εr of each layer, which its ODB++ does not: with them, RP-117 is now checked. On the 13 KiCad 9 example boards, exported in both formats, the model and the findings match those of the same board's ODB++. The few differences come from ODB++ rounding to 0.01 mm, the stack-up that only IPC-2581 carries, and how KiCad writes each format.
