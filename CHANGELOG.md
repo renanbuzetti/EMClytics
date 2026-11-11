@@ -5,6 +5,10 @@ Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
 ## [0.3.5] — unreleased
 
+### New
+- **IPC-2581 import:** besides ODB++, the program opens the IPC-2581 (revisions B and C) that KiCad and other CAD tools export: the .xml (or .cvg) file, or the .zip that contains it. The format is recognized from the content, when opening the file, on drag and drop, and on the command line. KiCad's IPC-2581 also carries the thickness and εr of each layer, which its ODB++ does not: with them, RP-117 is now checked. On the 13 KiCad 9 example boards, exported in both formats, the model and the findings match those of the same board's ODB++. The few differences come from ODB++ rounding to 0.01 mm, the stack-up that only IPC-2581 carries, and how KiCad writes each format.
+- **KiCad exporter flaws undone on reading**, with a warning: a refdes with an extra "_1" goes back to the project name (J2_1 becomes J2), and the pad copper offset, which KiCad writes without the component rotation, goes back in place from the hole.
+
 ### Changed
 - **Rules that did not run now run:** many ODB++ exports carry only the order of the copper layers, without the dielectric layers, and without the component properties. Before, this left 17 of the 30 automatic rules unchecked on most boards, among them RP-036 (track crossing a slot) and RP-012 (IC connected straight to the connector). Now they run with what the board has; the one that needs the thicknesses (RP-117) says only once that the data is missing. On the 11 real example boards, the automatic rules now run in 223 rule × board combinations, against 104 before.
 - **Calibration of the rules that now run** (without it, there would be 1,145 new findings on the 11 boards; with it, 464):
