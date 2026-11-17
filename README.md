@@ -21,12 +21,17 @@ EMClytics reads the ODB++ or IPC-2581 export of a board, applies a rule base of 
 - **Reads IPC-2581** (revisions B and C: the `.xml` or `.cvg` file, or the `.zip` with it inside), with the thickness and εr of each layer when the export carries them. The format is recognized from the content.
   - Checked with KiCad 9: 13 example boards exported in both formats give the same board and the same findings as their ODB++, apart from a few explained differences. Other tools that export IPC-2581 should open, but have not been tested yet.
 - **288 EMC layout rules:** zoning, planes and return path, decoupling, interfaces and filtering, transmission lines, layer changes, stack-up, crystals, system ESD and others. Each rule gives the physical mechanism and the suggested fix.
-- **30 automatic checks**, among them:
+- **39 automatic checks**, among them:
   - a track crossing a slot or split in the reference plane;
+  - openings and merged antipads in the reference plane larger than λ/100 at fMAX;
+  - a board edge without 0V stitching vias (via wall) every λ/10;
   - a split 0V (like AGND/DGND), connectors on different parts of the plane and stitching of boundaries and isolations;
   - an incomplete or hatched reference plane, and a fast track near the plane edge;
   - a decap far from the power pin, on the opposite side or on a shared via;
   - fast circuits and crystals near external connectors, and external connectors spread over several edges;
+  - copper of other circuits in the external connector zone, and connector power pins without a 0V pin next to them;
+  - long branches (stubs) on critical nets, differential pairs near the plane edge and with mismatched lengths;
+  - power planes of different domains overlapping;
   - a zone larger than λ/10 at fMAX without provision for shielding;
   - layer changes on a critical net, without stitching vias or near a slot;
   - planes of the same net without stitching vias every λ/15;
@@ -44,7 +49,7 @@ EMClytics reads the ODB++ or IPC-2581 export of a board, applies a rule base of 
 - **Light and dark theme**, which can follow Windows (**View › Theme**).
 - **English and Portuguese:** interface, findings, rules and report in both languages (**Idioma / Language** menu).
 - **An example board** inside the program (LimeSDR Mini 2.5), to see everything working with one click.
-- **Command line** (`EMClytics-cli.exe`): the same report without opening the window, for use in scripts.
+- **Command line** (`EMClytics-cli.exe`): the same report without opening the window, for use in scripts, plus the analysis as JSON and a gate by severity (exit code 4) for build pipelines.
 - **No AI and no cloud:** fixed rules, and everything runs on your computer.
 
 | | |

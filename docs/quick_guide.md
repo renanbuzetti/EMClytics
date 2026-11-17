@@ -62,7 +62,7 @@ If a finding is acceptable in your project, select it and use **Accept as except
 
 ## 6. Report
 
-**Export HTML report** creates a file with the same summary as the screen, the findings of each rule, the rules not verified, the manual checklist, the rules with no finding and what the importer was able to read from the export. The report is in the program's language, shows the program version, the program that generated the export and an identifier of the rule base used, and follows the light or dark theme of the system of whoever opens it.
+**Export HTML report** creates a file with the same summary as the screen, the findings of each rule, the rules not verified, the manual checklist, the rules with no finding and what the importer was able to read from the export. The report is in the program's language, shows the program version, the program that generated the export, the time with the time zone and, at the end, the SHA-256 of the input, of `project_emc.yaml` and of the rule base used, to know later exactly what was analyzed. It follows the light or dark theme of the system of whoever opens it.
 
 ## 7. Command line
 
@@ -73,5 +73,8 @@ EMClytics-cli --entrada <ODB++ folder or .tgz, or IPC-2581 .xml> --intencao proj
 ```
 
 `EMClytics-cli --help` shows the options; they are in Portuguese, as are the keys of `project_emc.yaml`. The language is the same as the window's; to change it for one run only, use `--idioma en`. The exit code is 0 when the report was written, 2 when there is an error in `project_emc.yaml` and 3 when the board did not open.
+
+- `--json analysis.json` also writes the analysis for other programs: each finding with a stable key (rule, nets, refdes, layer and spot), the SHA-256 of the input, of the intent and of the rule base, and what the format was able to deliver.
+- `--falha-se alta` (or `media`, or `baixa`) works as a gate, for example in a build pipeline: exit code 4 when there is an open violation of that severity or higher (`alta` = high, `media` = medium, `baixa` = low). Findings accepted as exceptions do not count. The report is written anyway.
 
 To find out whether there is a new version, use **Help › Check for updates**: the versions page opens in the browser. The program itself does not use the internet.

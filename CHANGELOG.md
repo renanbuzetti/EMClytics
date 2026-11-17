@@ -3,6 +3,30 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.6] — 2026-11-17
+
+### New
+- **9 new automatic checks (39 in total)**, each with its own animated illustration and calibrated on 24 example boards (11 real ones and 13 from KiCad), to report only what has evidence:
+  - **RP-033:** openings in the reference plane larger than λ/100 at fMAX (merged antipads, slots, cutouts, clearance around copper of another net); an isolated hole antipad is reported apart, as a warning.
+  - **RP-035:** merged antipads in the reference plane, with high severity when a critical track passes over them.
+  - **RP-053:** perimeter via wall: how much of the outline has no 0V hole every λ/10 (or λ/50) at fMAX.
+  - **RP-016:** copper of other circuits in the external connector zone, layer by layer.
+  - **RP-084:** connector power pins without a 0V pin next to them; standard interface connectors (USB, HDMI, SD…) are left out.
+  - **RP-096:** branches of critical nets longer than λ/100 at fMAX.
+  - **RP-279:** power planes of different domains overlapping.
+  - **RP-105 and RP-184:** differential pair near the plane edge and mismatched lengths, for the pairs declared in project_emc.yaml (without a declaration, the rule shows the candidates by name).
+- **Command line:** `--json` writes the analysis for other programs (each finding with a stable key, the hashes and the format capability) and `--falha-se alta|media|baixa` gives exit code 4 when there is an open violation of that severity or higher.
+- **Traceable report:** the hash of the project_emc.yaml used, a section with the full SHA-256 of the input, the intent and the rule base, and the time with the time zone.
+
+### Changed
+- **Layers when choosing a finding or a rule:** the board turns on all the layers involved (both ends of a layer change, both planes of a cavity), and a finding without a layer no longer leaves the previous finding's layers on. A click on the rule shows all its findings together.
+- **From the Interfaces and filtering (or Zones) tab to the board:** the component is highlighted, on the side where it is mounted, with its surroundings in view.
+- **RP-008 and RP-007 say what to move:** RP-008 draws the main edge, the arrow to it and the area between the connectors; RP-007 draws the band around the connector and the stretch of the track inside it.
+- **project_emc.yaml checked:** frequency, εr, divisor and distance out of range, and a hand-written exception without target, justification, author or date, become a clear error. An exception that covers no finding becomes a warning.
+- **0V names:** C-GND, CH_GND and names with the sheet path (/supply/GND) are now recognized.
+- **RP-073:** an unmounted decap does not count. **RP-074:** a via with a badly named layer in the export no longer brings the rule down.
+- **Internal error in a check:** the report only says that the rule was not verified; the details go to the local log.
+
 ## [0.3.5] — 2026-11-11
 
 ### New
