@@ -3,6 +3,11 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.9] — 2026-11-17
+
+### Changed
+- **Filter proposal: the common-mode choke is a single component**, drawn over the two conductors of the pair, as in a schematic: one winding on each, the core between them and the phase dots. The two conductors of each pair are kept together in the drawing, with the same background, even when their pins are not next to each other on the connector.
+
 ## [0.3.8] — 2026-11-17
 
 ### New
