@@ -51,6 +51,7 @@ EMClytics reads the ODB++ or IPC-2581 export of a board, applies a rule base of 
 - **An example board** inside the program (LimeSDR Mini 2.5), to see everything working with one click.
 - **Command line** (`EMClytics-cli.exe`): the same report without opening the window, for use in scripts, plus the analysis as JSON and a gate by severity (exit code 4) for build pipelines.
 - **No AI and no cloud:** fixed rules, and everything runs on your computer.
+- **New version notice** (optional, since 0.3.7): a bar at the top tells you when a newer version is out.
 
 | | |
 |---|---|
@@ -110,7 +111,7 @@ This preview is free and includes everything that exists today. The **Pro** vers
 
 ## Privacy
 
-EMClytics does not use the internet: the board and the results never leave your computer.
+The board and the results never leave your computer. The only connection is the optional new version check (since 0.3.7): the first time it opens, the program asks whether it may look for new versions; with a yes, at most once a day, it reads only the number of the latest release on GitHub. Nothing is downloaded or installed by itself. You can turn it off in **Help › Look for new versions at startup**.
 
 ## Contact
 

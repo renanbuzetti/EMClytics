@@ -3,6 +3,14 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.7] — 2026-11-17
+
+### New
+- **New version notice:** the first time it opens, the program asks whether it may look for new versions. With a yes, at most once a day, it reads only the number of the latest version on GitHub and, if there is a newer one, shows a bar at the top with the way to download it. Nothing from the board or the results leaves the computer, and nothing is downloaded by itself. Help › Look for new versions at startup turns it on and off; the ✕ on the bar dismisses the notice for that version.
+
+### Changed
+- **Help › Check for updates** tells you right away whether there is a new version; with no answer (no network, proxy), it opens the versions page in the browser, as before.
+
 ## [0.3.6] — 2026-11-17
 
 ### New
