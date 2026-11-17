@@ -3,6 +3,14 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.8] — 2026-11-17
+
+### New
+- **Filter proposal per connector**, in the Interfaces and filtering tab: the **Filter proposal** button draws, next to the connector, the filter the rules call for on each pin. Signal: a capacitor to the plane and an R or ferrite in series. Differential pair: a common-mode choke. Power: a capacitor and a ferrite. An optional TVS, and the shell bond when there is a separate 0V. What the board already has is drawn solid, with its refdes; what is missing, dashed. Below, the list of what to add, with the quantity and the rules for that connector's filter. The values are only those the rule base gives (e.g. a 22 Ω R); the rest is "to be sized". An RF coaxial connector (SMA, U.FL…) gets no proposal on its pins.
+
+### Changed
+- **A signal net with a via no longer becomes power:** the via pad on the plane layers made the net count as a plane. On KiCad boards, hundreds of signals showed up as power in the Interfaces and filtering tab and in the recommendations table.
+
 ## [0.3.7] — 2026-11-17
 
 ### New

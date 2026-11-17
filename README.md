@@ -43,6 +43,7 @@ EMClytics reads the ODB++ or IPC-2581 export of a board, applies a rule base of 
 - **An animated illustration in each finding:** the problem and the fix side by side, with the current moving, to understand the context without being a specialist.
 - **Missing data never passes:** a rule that depends on missing data appears as "not verified", with the reason. Manual rules appear as a checklist.
 - **Stack-up cross-section**, with the role of each layer; **routing recommendations** by signal type; **interfaces and filtering** per connector, with the path from each pin to the IC.
+- **Filter proposal per connector:** the filter the rules call for on each pin, drawn next to the connector (capacitor to the plane, series R or ferrite, common-mode choke on differential pairs, optional TVS), with what the board already has and the list of what to add. Values only where the rule base gives them; the rest is "to be sized".
 - **Electromagnetic zones:** the zone of each IC (interface, radio, analog, digital, high-speed digital, switching power supply), whether the current layout mixes the zones and a proposal over the board outline, with the ICs, the connectors and where shielding goes. Another view keeps the connectors and antennas in place and arranges the rest around them.
 - **Grounds (0V):** the role of each 0V net (main, AGND/DGND, chassis, input, isolated), where it is, what connects one to another and what to do.
 - **HTML report** of the analysis, with the same summary, the zones and the 0V.
