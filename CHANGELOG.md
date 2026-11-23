@@ -3,6 +3,11 @@
 Each version lists what is new, what changed and what does not exist yet.
 Version numbers: MAJOR.MINOR.PATCH. The 0.x series is a preview.
 
+## [0.3.10] — 2026-11-23
+
+### Changed
+- **Connector by refdes, fewer mistakes:** a component with refdes J, P, CN or CON whose footprint is a passive chip (0201, 0402, 0603, 0805 or 1206 in the name) and that has two SMD pins is a jumper or solder bridge, not a connector. It leaves the interface zone and the Interfaces tab and, with a 0 Ω value, links its two nets like a 0 Ω resistor. A single-pin connector (test point, loose pin) no longer goes to the interface zone or makes its net an interface line either. This applies to ODB++ and IPC-2581. The type given by the CAD and what you declare in `prefixos_refdes` or in `conectores_externos` still apply. On the 24 example boards, 21 components left the interface zone.
+
 ## [0.3.9] — 2026-11-17
 
 ### Changed
